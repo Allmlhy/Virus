@@ -1,28 +1,28 @@
 <template>
-  <div class="domestic">
+  <div class="international">
     <NavBar />
     <div class="container">
-      <h2>国内疫情指标</h2>
-      <p>这里显示国内疫情的相关数据。</p>
-      <div class="map-container" style="height: 400px; background-color: #f0f0f0;">
-        <p>占位地图，待加载...</p>
+      <h2>国际疫情指标</h2>
+      <p>这里显示全球疫情的相关数据。</p>
+      <div class="map-container" ref="chartContainer" style="height: 400px;">
+        <p v-if="!isMapLoaded">地图加载中...</p>
       </div>
       <div class="data-container">
         <div class="data-box">
-          <h3>国内每日死亡数</h3>
-          <p>模拟数据：800</p>
+          <h3>全球每日死亡数</h3>
+          <p>模拟数据：10000</p>
         </div>
         <div class="data-box">
-          <h3>国内每日确诊数</h3>
-          <p>模拟数据：4000</p>
+          <h3>全球每日确诊数</h3>
+          <p>模拟数据：50000</p>
         </div>
         <div class="data-box">
-          <h3>国内总接种数量</h3>
-          <p>模拟数据：7000</p>
+          <h3>全球总接种数量</h3>
+          <p>模拟数据：3000000</p>
         </div>
         <div class="data-box">
-          <h3>国内每日治愈数</h3>
-          <p>模拟数据：2500</p>
+          <h3>全球每日治愈数</h3>
+          <p>模拟数据：45000</p>
         </div>
       </div>
     </div>
@@ -31,6 +31,57 @@
 
 <script setup>
 import NavBar from "@/components/NavBar.vue";
+import { ref, onMounted } from "vue";
+import * as echarts from "echarts";
+import worldMap from "@/assets/map/world.json"; // ✅ 使用你的路径
+
+const chartContainer = ref(null);
+const isMapLoaded = ref(false);
+
+onMounted(() => {
+  const chart = echarts.init(chartContainer.value);
+  echarts.registerMap("world", worldMap);
+
+  const option = {
+    tooltip: {
+      trigger: "item",
+      formatter: "{b}: {c}"
+    },
+    visualMap: {
+      min: 0,
+      max: 100000,
+      text: ["高", "低"],
+      realtime: false,
+      calculable: true,
+      inRange: {
+        color: ["#e0ffff", "#006edd"]
+      }
+    },
+    series: [
+      {
+        name: "确诊数",
+        type: "map",
+        map: "world",
+        roam: true,
+        emphasis: {
+          label: {
+            show: true
+          }
+        },
+        data: [
+          { name: "United States", value: 20000 },
+          { name: "India", value: 15000 },
+          { name: "Brazil", value: 12000 },
+          { name: "China", value: 800 },
+          { name: "Russia", value: 9000 }
+        ]
+      }
+    ]
+  };
+
+  chart.setOption(option);
+  isMapLoaded.value = true;
+});
 </script>
 
 <style scoped>
@@ -49,6 +100,7 @@ h2 {
   align-items: center;
   font-size: 18px;
   color: #666;
+  background-color: #f0f0f0;
 }
 
 .data-container {

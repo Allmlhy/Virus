@@ -4,9 +4,10 @@
     <div class="container">
       <h2>国内疫情指标</h2>
       <p>这里显示国内疫情的相关数据。</p>
-      <div class="map-container" style="height: 400px; background-color: #f0f0f0;">
-        <p>占位地图，待加载...</p>
+      <div class="map-container" ref="chartContainer" style="height: 400px;">
+        <p v-if="!isMapLoaded">地图加载中...</p>
       </div>
+
       <div class="data-container">
         <div class="data-box">
           <h3>国内每日死亡数</h3>
@@ -31,6 +32,49 @@
 
 <script setup>
 import NavBar from "@/components/NavBar.vue";
+import { ref, onMounted } from 'vue';
+import * as echarts from 'echarts';
+import chinaMap from '@/assets/map/china.json'; // ✅ 直接从 src/assets 引入
+
+const chartContainer = ref(null);
+const isMapLoaded = ref(false);
+
+onMounted(() => {
+  const chart = echarts.init(chartContainer.value);
+
+  echarts.registerMap('china', chinaMap); // ✅ 直接注册已导入的 JSON 对象
+
+  const option = {
+    tooltip: {
+      trigger: 'item',
+      formatter: '{b}: {c}'
+    },
+    visualMap: {
+      min: 0,
+      max: 1000,
+      left: 'left',
+      top: 'bottom',
+      text: ['高', '低'],
+      calculable: true
+    },
+    series: [{
+      name: '确诊数',
+      type: 'map',
+      map: 'china',
+      label: {
+        show: true
+      },
+      data: [
+        { name: '北京', value: 123 },
+        { name: '上海', value: 321 },
+        { name: '广东', value: 654 }
+      ]
+    }]
+  };
+
+  chart.setOption(option);
+  isMapLoaded.value = true;
+});
 </script>
 
 <style scoped>
@@ -49,6 +93,7 @@ h2 {
   align-items: center;
   font-size: 18px;
   color: #666;
+  background-color: #f0f0f0;
 }
 
 .data-container {
