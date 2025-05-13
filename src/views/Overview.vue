@@ -78,9 +78,10 @@ onMounted(() => {
 
 <style scoped>
 .container {
-  padding-top: 80px; /* 预留空间避免被 NavBar 遮挡 */
+  padding-top: 60px;
   margin: 0 20px;
 }
+
 
 h2 {
   text-align: center;

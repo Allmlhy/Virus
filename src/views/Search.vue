@@ -46,8 +46,10 @@ const searchData = () => {
 
 <style scoped>
 .container {
-  margin: 20px;
+  padding-top: 60px;
+  margin: 0 20px;
 }
+
 
 h2 {
   text-align: center;

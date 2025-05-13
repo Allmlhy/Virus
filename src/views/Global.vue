@@ -3,28 +3,31 @@
     <NavBar />
     <div class="container">
       <h2>国际疫情指标</h2>
-      <p>这里显示全球疫情的相关数据。</p>
-      <div class="map-container" ref="chartContainer" style="height: 400px;">
-        <p v-if="!isMapLoaded">地图加载中...</p>
-      </div>
-      <div class="data-container">
-        <div class="data-box">
-          <h3>全球每日死亡数</h3>
-          <p>模拟数据：10000</p>
+
+      <div class="summary-container">
+        <div class="summary-box">
+          <p class="compare">较昨日 <span class="up">+100</span></p>
+          <p class="number red">1000000</p>
+          <p class="label">全球累计死亡数</p>
         </div>
-        <div class="data-box">
-          <h3>全球每日确诊数</h3>
-          <p>模拟数据：50000</p>
+        <div class="summary-box">
+          <p class="compare">较昨日 <span class="up">+5000</span></p>
+          <p class="number orange">50000000</p>
+          <p class="label">全球累计确诊数</p>
         </div>
-        <div class="data-box">
-          <h3>全球总接种数量</h3>
-          <p>模拟数据：3000000</p>
-        </div>
-        <div class="data-box">
-          <h3>全球每日治愈数</h3>
-          <p>模拟数据：45000</p>
+        <div class="summary-box">
+          <p class="compare">较昨日 <span class="up">+2000000</span></p>
+          <p class="number blue">300000000</p>
+          <p class="label">全球累计接种数量</p>
         </div>
       </div>
+
+      <div class="map-wrapper">
+        <div class="map-container" ref="chartContainer">
+          <p v-if="!isMapLoaded">地图加载中...</p>
+        </div>
+      </div>
+
     </div>
   </div>
 </template>
@@ -86,44 +89,86 @@ onMounted(() => {
 
 <style scoped>
 .container {
-  margin: 20px;
+  padding-top: 60px;
+  margin: 0 20px;
 }
 
 h2 {
   text-align: center;
 }
 
-.map-container {
+.summary-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 10px 0;
+  margin: 10px 0 20px;
+  border-top: 1px solid #eaeaea;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.summary-box {
+  width: 130px;
+  padding: 8px 6px;
+  text-align: center;
+  background: #fafafa;
+  border: 1px solid #eee;
+  border-radius: 6px;
+}
+
+.compare {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 4px;
+}
+
+.compare .up {
+  color: #c9302c;
+}
+
+.compare .down {
+  color: #5bc0de;
+}
+
+.compare .same {
+  color: #999;
+}
+
+.number {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 2px 0;
+}
+
+.label {
+  font-size: 13px;
+  color: #333;
+}
+
+.red { color: #c9302c; }
+.orange { color: #f0ad4e; }
+.blue { color: #5bc0de; }
+
+.map-wrapper {
   margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.map-container {
+  width: 100%;
+  height: 400px;
+  background-color: #f0f0f0;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 18px;
   color: #666;
-  background-color: #f0f0f0;
 }
 
-.data-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  gap: 20px;
-  margin-top: 20px;
-}
-
-.data-box {
-  background-color: #fff;
-  border: 1px solid #ddd;
-  padding: 10px;
-  text-align: center;
-}
-
-.data-box h3 {
-  margin: 0;
-  color: #333;
-}
-
-.data-box p {
-  margin: 10px 0 0;
-  color: #555;
+.right-placeholder {
+  flex-grow: 1;
 }
 </style>
