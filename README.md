@@ -39,6 +39,34 @@ covid19-visual-system/
 ├── dashboard-front/     # 前端展示页面（ECharts）
 ├── sql/                 # 初始化数据库脚本
 └── README.md            # 项目说明文件
+```
+
+## 🏗️ 系统架构图
+
+> 请将下方图片链接替换为你的实际架构图
+
+![系统架构图](https://your-image-link.com/architecture.png)
+
+---
+
+## 🖥️ 可视化效果展示
+
+> 请将下方图片链接替换为你的前端页面截图
+
+![可视化大屏](https://your-image-link.com/visual-dashboard.png)
+
+---
+
+## 🔧 本地运行指南
+
+### 1️⃣ 启动 Kafka 和 Zookeeper
+
+```bash
+# 启动 Zookeeper
+bin/zookeeper-server-start.sh config/zookeeper.properties
+
+# 启动 Kafka
+bin/kafka-server-start.sh config/server.properties
 
 ## 参考项目：https://github.com/CR553/Project01
 
