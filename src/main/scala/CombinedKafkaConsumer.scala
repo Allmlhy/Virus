@@ -68,10 +68,10 @@ object CombinedKafkaConsumer {
 
               result.write
                 .format("jdbc")
-                .option("url", "jdbc:mysql://localhost:3306/virus?useSSL=false&serverTimezone=UTC")
+                .option("url", "jdbc:mysql://106.12.170.52:13327/sparkprogram?allowPublicKeyRetrieval=true&useSSL=false")
                 .option("dbtable", "virus_data1")
-                .option("user", "root")
-                .option("password", "Leen1977!!")
+                .option("user", "lmx")
+                .option("password", "lmx")
                 .mode("append")
                 .save()
 
@@ -82,10 +82,10 @@ object CombinedKafkaConsumer {
 
               result.write
                 .format("jdbc")
-                .option("url", "jdbc:mysql://localhost:3306/virus?useSSL=false&serverTimezone=UTC")
+                .option("url", "jdbc:mysql://106.12.170.52:13327/sparkprogram?allowPublicKeyRetrieval=true&useSSL=false")
                 .option("dbtable", "virus_data2")
-                .option("user", "root")
-                .option("password", "Leen1977!!")
+                .option("user", "lmx")
+                .option("password", "lmx")
                 .mode("append")
                 .save()
           }
