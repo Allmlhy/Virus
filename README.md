@@ -56,7 +56,6 @@ covid19-visual-system/
 ![可视化大屏](https://your-image-link.com/visual-dashboard.png)
 
 ---
-
 ## 🔧 本地运行指南
 
 ### 1️⃣ 启动 Kafka 和 Zookeeper
@@ -71,15 +70,34 @@ bin/kafka-server-start.sh config/server.properties
 
 bin/kafka-topics.sh --create --topic covid-topic --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
 
-### ............
+### 3️⃣ 启动数据采集模块
+
+cd data-crawler
+python run.py
+
+### 4️⃣ 启动 Spark Streaming 实时计算模块
+
+cd spark-streaming
+spark-submit --master local[*] main.py
+
+### 5️⃣ 启动后端 API 服务
+
+cd backend-api
+mvn spring-boot:run
+
+### 6️⃣ 启动前端页面
+
+# 可直接通过浏览器打开前端页面
+open dashboard-front/index.html
 
 ### 🧾 数据来源
-丁香园疫情数据
-约翰霍普金斯大学 COVID-19 数据仓库
+
+- 丁香园疫情数据
+- 约翰霍普金斯大学 COVID-19 数据仓库
 
 ### 📜 许可证 License
-本项目采用 MIT License 许可。
 
+本项目采用 MIT License 许可。
 
 
 
