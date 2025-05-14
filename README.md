@@ -60,10 +60,10 @@ covid19-visual-system/
 
 ### 1️⃣ 启动 Kafka 和 Zookeeper
 
-# 启动 Zookeeper
+#### 启动 Zookeeper
 bin/zookeeper-server-start.sh config/zookeeper.properties
 
-# 启动 Kafka
+#### 启动 Kafka
 bin/kafka-server-start.sh config/server.properties
 
 ### 2️⃣ 创建 Kafka Topic
@@ -90,23 +90,27 @@ mvn spring-boot:run
 # 可直接通过浏览器打开前端页面
 open dashboard-front/index.html
 
+---
+
 ### 🧾 数据来源
 
 - 丁香园疫情数据
 - 约翰霍普金斯大学 COVID-19 数据仓库
 
+---
 ### 📜 许可证 License
 
 本项目采用 MIT License 许可。
 
 
-
+---
 
 ## 参考项目：https://github.com/CR553/Project01
 
-![image](https://github.com/user-attachments/assets/1834fb61-1ac1-4610-bada-7cb588cf253d)
+### 导入历史数据
+<img width="1280" alt="0b2d5ef33b29f27b67dddc5fa7bfcb9" src="https://github.com/user-attachments/assets/2961fa95-4ffb-4bc1-a3d0-6bb752595999" />
 
-### 国内数据
+### 国内数据建表
 
 <p float="left">
   <img src="https://github.com/user-attachments/assets/e888c593-88fd-4474-afe7-42a3dbecdd6e" width="45%" />
@@ -115,5 +119,4 @@ open dashboard-front/index.html
   <img src="https://github.com/user-attachments/assets/69d8cafb-2273-4851-a419-14ec31e1f2cf" width="45%" />
 </p>
 
-### 导入历史数据
-<img width="1280" alt="0b2d5ef33b29f27b67dddc5fa7bfcb9" src="https://github.com/user-attachments/assets/2961fa95-4ffb-4bc1-a3d0-6bb752595999" />
+
