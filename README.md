@@ -61,12 +61,28 @@ covid19-visual-system/
 
 ### 1️⃣ 启动 Kafka 和 Zookeeper
 
-```bash
 # 启动 Zookeeper
 bin/zookeeper-server-start.sh config/zookeeper.properties
 
 # 启动 Kafka
 bin/kafka-server-start.sh config/server.properties
+
+### 2️⃣ 创建 Kafka Topic
+
+bin/kafka-topics.sh --create --topic covid-topic --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+
+### ............
+
+### 🧾 数据来源
+丁香园疫情数据
+约翰霍普金斯大学 COVID-19 数据仓库
+
+### 📜 许可证 License
+本项目采用 MIT License 许可。
+
+
+
+
 
 ## 参考项目：https://github.com/CR553/Project01
 
