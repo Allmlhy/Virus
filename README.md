@@ -44,8 +44,9 @@ covid19-visual-system/
 ## 🏗️ 系统架构图
 
 > 请将下方图片链接替换为你的实际架构图
+![front](https://github.com/user-attachments/assets/f2f4309c-c294-4943-8b88-ea8be0224360)
 
-![系统架构图](https://your-image-link.com/architecture.png)
+
 
 ---
 
@@ -53,7 +54,9 @@ covid19-visual-system/
 
 > 请将下方图片链接替换为你的前端页面截图
 
-![可视化大屏](https://your-image-link.com/visual-dashboard.png)
+<img width="1280" alt="63769b3b17517270c810f8b1ec6c060" src="https://github.com/user-attachments/assets/c52a1a0a-189c-4891-99c3-800e41e2149f" />
+
+
 
 ---
 ## 🔧 本地运行指南
