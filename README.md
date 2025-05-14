@@ -115,11 +115,32 @@ open dashboard-front/index.html
 
 ### 国内数据建表
 
-<p float="left">
-  <img src="https://github.com/user-attachments/assets/e888c593-88fd-4474-afe7-42a3dbecdd6e" width="45%" />
-</p>
-<p float="left">
-  <img src="https://github.com/user-attachments/assets/69d8cafb-2273-4851-a419-14ec31e1f2cf" width="45%" />
-</p>
+✅ 表1：regions（地区信息表）
+字段名	中文含义	说明
+region_id	地区编号	主键，唯一标识一个地区
+province	省份	地区所属的省级行政单位
+city	城市	地区所属的地级行政单位
+
+✅ 表2：daily_stats（每日新增统计数据表）
+字段名	中文含义	说明
+id	主键编号	自增主键
+region_id	地区编号	外键，关联 regions 表
+Date_id	日期	记录数据的统计日期
+new_deaths	新增死亡人数	当天新增的死亡病例数
+new_confirmed	新增确诊人数	当天新增的确诊病例数
+new_recovered	新增治愈人数	当天新增的治愈病例数
+new_suspected	新增疑似病例数	当天新增的疑似病例数
+
+✅ 表3：historical_stats（累计历史统计数据表）
+字段名	中文含义	说明
+id	主键编号	自增主键
+region_id	地区编号	外键，关联 regions 表
+Date_id	日期	记录数据的统计日期
+total_confirmed	累计确诊人数	截至该日期为止的累计确诊人数
+total_deaths	累计死亡人数	截至该日期为止的累计死亡人数
+total_recovered	累计治愈人数	截至该日期为止的累计治愈人数
+total_imported	累计境外输入人数	截至该日期为止从境外输入的病例累计人数
+total_asymptomatic	累计无症状感染者	截至该日期为止的无症状感染者总数
+current_confirmed	现存确诊人数	当前仍在治疗中的确诊人数（确诊 - 死亡 - 治愈）
 
 
