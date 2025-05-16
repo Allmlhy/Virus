@@ -14,7 +14,7 @@ pip install flask pymysql
 
 首页欢迎页.
 
-![hello](.\pic\hello.jpg)
+![hello](./pic/hello.jpg)
 
 世界疫情数据播报页，可以依次选择国家、日期进行查看，查看到的信息包括：
 
