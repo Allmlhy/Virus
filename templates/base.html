@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %} - 卫生健康委员会后台系统</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a class="nav-title" href="{{ url_for('home') }}">卫生健康委员会</a>
+            <div class="nav-links">
+                <a href="{{ url_for('home') }}">首页</a>
+                <div class="dropdown">
+                    <a class="dropbtn" href="{{ url_for('show_global') }}">世界疫情播报</a>
+                </div>
+                <div class="dropdown">
+                    <a class="dropbtn" href="{{ url_for('show_china') }}">中国疫情播报</a>
+                </div>
+                <div class="admin-entry">
+                    <a href="{{ url_for('add_china_epidemic_data') }}" class="china-btn">📝 中国疫情数据录入</a>
+                </div>
+                <div class="admin-entry">
+                    <a href="{{ url_for('add_global_epidemic_data') }}" class="global-btn">🌍 全球疫情数据录入</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <div class="footer">
+        © 2025 卫生健康委员会 | 本站内容仅供参考
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const chinaBtn = document.querySelector('.china-btn');
+            const globalBtn = document.querySelector('.global-btn');
+            const otherLinks = document.querySelectorAll('.nav-links a:not(.china-btn):not(.global-btn)'); // 除了录入按钮外的导航链接
+
+            function activateButton(btnToActivate, btnToDeactivate) {
+                btnToDeactivate.classList.remove('active');
+                btnToActivate.classList.add('active');
+                localStorage.setItem('activeBtn', btnToActivate.classList.contains('china-btn') ? 'china' : 'global');
+            }
+
+            // 点击录入按钮时保存状态
+            chinaBtn.addEventListener('click', function () {
+                activateButton(chinaBtn, globalBtn);
+            });
+
+            globalBtn.addEventListener('click', function () {
+                activateButton(globalBtn, chinaBtn);
+            });
+
+            // 点击其他导航链接时清除状态
+            otherLinks.forEach(link => {
+                link.addEventListener('click', function () {
+                    localStorage.removeItem('activeBtn');
+                });
+            });
+
+            // 页面加载时恢复激活状态
+            const activeBtn = localStorage.getItem('activeBtn');
+            if (activeBtn === 'china') {
+                chinaBtn.classList.add('active');
+                globalBtn.classList.remove('active');
+            } else if (activeBtn === 'global') {
+                globalBtn.classList.add('active');
+                chinaBtn.classList.remove('active');
+            } else {
+                // 默认都不激活
+                chinaBtn.classList.remove('active');
+                globalBtn.classList.remove('active');
+            }
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}世界信息录入成功{% endblock %}
+
+{% block content %}
+<div class="container success-box">
+    <h2>✅ 世界信息录入成功！</h2>
+    <div class="actions">
+        <a href="{{ url_for('add_global_epidemic_data') }}" class="btn">继续录入</a>
+        <a href="{{ url_for('home') }}" class="btn">返回首页</a>
+    </div>
+</div>
+
+<style>
+.success-box {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.actions {
+    margin-top: 30px;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.btn {
+    padding: 12px 25px;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.btn:first-child {
+    background: #89ad08; /* 可以用绿色系，跟全球按钮颜色呼应 */
+    color: white;
+}
+
+.btn:last-child {
+    background: #6c757d;
+    color: white;
+}
+
+.btn:hover {
+    opacity: 0.9;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}中国疫情播报{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>请选择省份</h2>
+    <div class="province-grid">
+        {% for p in provinces %}
+        <a href="{{ url_for('show_province_dates', province=p) }}" class="province-card">
+            {{ p }}
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

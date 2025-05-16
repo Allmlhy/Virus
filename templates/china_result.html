@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}{{ province }} 疫情数据{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>{{ province }} {{ date }} 疫情数据</h2>
+    <div class="report-content">
+        <div class="report-card">
+            {{ result_text | safe }}
+        </div>
+    </div>
+    <a href="{{ url_for('show_province_dates', province=province) }}" class="back-link">← 返回日期选择</a>
+</div>
+
+<style>
+.report-card {
+    background: #f8fafc;
+    padding: 25px;
+    border-radius: 8px;
+    line-height: 1.8;
+    font-size: 16px;
+}
+
+.report-card .data-item {
+    margin: 10px 0;
+}
+
+.confirmed { color: #e74c3c; }
+.cured, .total-confirmed { color: #2980b9; }
+.death { color: #6c757d; }
+.suspected, .total-death { color: #343a40; }
+
+.no-data {
+    color: #888;
+    font-style: italic;
+    margin-top: 20px;
+}
+</style>
+{% endblock %}

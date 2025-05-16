@@ -1,0 +1,324 @@
+.welcome-container {
+    text-align: center;
+    padding: 60px 30px;
+}
+
+.welcome-text {
+    font-size: 18px;
+    color: #666;
+    line-height: 1.8;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px 30px;
+    background-color: #f5f8fa; /* 淡淡的背景色 */
+    border-radius: 10px;
+    text-align: center; /* 文字居中 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* 轻微阴影 */
+    font-weight: 400;
+}
+
+body {
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  background-color: #f8f8f8;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+
+header, .navbar {
+  background-color: #004b8d;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+.navbar {
+  padding: 10px 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.nav-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.admin-entry {
+    margin-left: auto;
+}
+
+.admin-btn {
+    background: #28a745;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.admin-btn:hover {
+    background: #218838;
+}
+
+.nav-title {
+  font-size: 20px;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+}
+
+.nav-links > a {
+  color: white;
+  margin-left: 20px;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.nav-links > a:hover {
+  text-decoration: underline;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+  margin-left: 20px;
+}
+
+.dropbtn {
+  color: white;
+  font-size: 16px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #ffffff;
+  min-width: 160px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: #004b8d;
+  padding: 10px 15px;
+  display: block;
+  text-decoration: none;
+}
+
+.dropdown-content a:hover {
+  background-color: #f0f0f0;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.container {
+  max-width: 1100px; /* 从800px调到1100px */
+  margin: 30px auto;
+  background: white;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+h1, h2 {
+  color: #004b8d;
+}
+
+.footer {
+  text-align: center;
+  padding: 20px;
+  font-size: 14px;
+  color: #777;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-size: 14px;
+  color: #333;
+}
+
+thead {
+  background-color: #004b8d;
+  color: #fff;
+}
+
+thead th {
+  padding: 12px 10px;
+  font-weight: 600;
+  text-align: left;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f2f6fb;
+}
+
+tbody tr:hover {
+  background-color: #d6e4f5;
+  cursor: default;
+}
+
+tbody td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+/* 添加以下新样式 */
+.province-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px;
+    padding: 20px 0;
+}
+
+.province-card {
+    background: white;
+    border-radius: 8px;
+    padding: 20px 30px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+    text-align: center;
+    color: #004b8d;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 16px;
+    margin-bottom: 16px;
+}
+
+.province-card:hover {
+    transform: translateY(-3px);
+}
+
+
+.date-list {
+    display: grid;
+    gap: 12px;
+}
+
+.date-item {
+    background: white;
+    padding: 15px;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 20px;
+    color: #004b8d;
+    text-decoration: none;
+}
+
+/* 调整已有样式 */
+.container {
+    max-width: 1100px;
+    margin: 30px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+h1, h2 {
+    color: #004b8d;
+    margin-bottom: 1.5rem;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .nav-container {
+        flex-direction: column;
+        padding: 0 15px;
+    }
+
+    .nav-links {
+        width: 100%;
+        justify-content: space-around;
+        margin-top: 10px;
+    }
+
+    .province-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+.country-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px;
+    padding: 20px 0;
+}
+
+.country-card {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 6px rgba(0, 75, 141, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
+    color: #004b8d;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.country-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 75, 141, 0.3);
+    color: #002f5c;
+}
+
+.china-btn {
+    display: inline-block;
+    padding: 10px 20px; /* 上下10px，左右20px的内边距 */
+    margin-left: 15px;  /* 与前面的链接拉开一些距离 */
+    background-color: #1fb409; /* 蓝色背景 */
+    color: white; /* 白色文字 */
+    text-decoration: none; /* 去掉下划线 */
+    border-radius: 6px; /* 圆角按钮 */
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.china-btn:hover {
+    background-color: #0c6915; /* 悬停变深一点 */
+}
+
+.china-btn.active {
+    background-color: #0c6915; /* 点击后固定颜色 */
+}
+
+.global-btn {
+    display: inline-block;
+    padding: 10px 20px; /* 上下10px，左右20px的内边距 */
+    margin-left: 15px;  /* 与前面的链接拉开一些距离 */
+    background-color: #89ad08; /* 背景 */
+    color: white; /* 白色文字 */
+    text-decoration: none; /* 去掉下划线 */
+    border-radius: 6px; /* 圆角按钮 */
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.global-btn:hover {
+    background-color: #445c00; /* 悬停变深一点的蓝色 */
+}
+
+.global-btn.active {
+    background-color: #445c00; /* 点击后固定颜色 */
+}

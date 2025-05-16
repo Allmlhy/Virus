@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}{{ country }} - 选择日期{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>{{ country }} - 请选择日期</h2>
+    <div class="date-list">
+        {% for d in dates %}
+        <a href="{{ url_for('show_country_data', country=country, date=d) }}" class="date-item">
+            {{ d }}
+        </a>
+        {% endfor %}
+    </div>
+    <a href="{{ url_for('show_global') }}" class="back-link">← 返回国家选择</a>
+</div>
+{% endblock %}

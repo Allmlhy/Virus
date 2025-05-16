@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}全球疫情播报{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>请选择国家</h2>
+    <div class="country-grid">
+        {% for country in countries %}
+        <a href="{{ url_for('show_country_dates', country=country) }}" class="country-card">
+            {{ country }}
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

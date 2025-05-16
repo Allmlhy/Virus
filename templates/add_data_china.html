@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+
+{% block title %}📝 中国疫情数据录入{% endblock %}
+
+{% block content %}
+<div class="container data-form">
+    <h2>📝 中国疫情数据录入</h2>
+
+    {% if errors %}
+    <div class="alert">
+        {% for error in errors %}
+        <p>{{ error }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <form method="post" novalidate>
+        <div class="form-row">
+            <div class="form-group half-width">
+                <label for="report_date">报告日期：</label>
+                <input type="date" id="report_date" name="report_date" required
+                       class="form-control" value="{{ request.form.report_date }}">
+            </div>
+
+            <div class="form-group half-width">
+                <label for="province">省份：</label>
+                <select id="province" name="province" class="form-control" required>
+                    <option value="">请选择省份</option>
+                    {% for p in provinces %}
+                    <option value="{{ p }}" {% if request.form.province == p %}selected{% endif %}>
+                        {{ p }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="city">城市：</label>
+            <input type="text" id="city" name="city" required
+                   class="form-control" value="{{ request.form.city }}">
+        </div>
+
+        <div class="form-row">
+            <div class="form-group quarter-width">
+                <label for="new_confirmed">新增确诊：</label>
+                <input type="number" min="0" id="new_confirmed" name="new_confirmed"
+                       class="form-control" value="{{ request.form.new_confirmed }}">
+            </div>
+
+            <div class="form-group quarter-width">
+                <label for="new_deaths">新增死亡：</label>
+                <input type="number" min="0" id="new_deaths" name="new_deaths"
+                       class="form-control" value="{{ request.form.new_deaths }}">
+            </div>
+
+            <div class="form-group quarter-width">
+                <label for="new_recovered">新增治愈：</label>
+                <input type="number" min="0" id="new_recovered" name="new_recovered"
+                       class="form-control" value="{{ request.form.new_recovered }}">
+            </div>
+
+            <div class="form-group quarter-width">
+                <label for="suspected">疑似病例：</label>
+                <input type="number" min="0" id="suspected" name="suspected"
+                       class="form-control" value="{{ request.form.suspected }}">
+            </div>
+        </div>
+
+        <button type="submit" class="submit-btn">提交数据</button>
+    </form>
+
+
+</div>
+
+<style>
+.data-form {
+    max-width: 700px;
+    margin: 30px auto 60px;
+    padding: 30px 40px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0, 75, 141, 0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h2 {
+    text-align: center;
+    color: #004b8d;
+    margin-bottom: 30px;
+    font-weight: 600;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #004b8d;
+}
+
+.form-control {
+    padding: 10px 15px;
+    border: 2px solid #d1d9e6;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+    outline-offset: 2px;
+}
+
+.form-control:focus {
+    border-color: #004b8d;
+    box-shadow: 0 0 6px rgba(0, 75, 141, 0.3);
+    outline: none;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.half-width {
+    flex: 1 1 48%;
+    min-width: 220px;
+}
+
+.quarter-width {
+    flex: 1 1 22%;
+    min-width: 120px;
+}
+
+.submit-btn {
+    display: block;
+    width: 20%;
+    background: #004b8d;
+    color: white;
+    padding: 10px 0;     /* 适当减小上下内边距，避免太高 */
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;     /* 字体稍微小一点 */
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 75, 141, 0.3);
+    transition: background-color 0.3s ease;
+    margin: 10px auto 0; /* 上方间距10px，左右自动居中 */
+}
+
+
+.submit-btn:hover {
+    background: #003366;
+}
+
+.alert {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #842029;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    font-weight: 600;
+    box-shadow: 0 2px 6px rgba(255, 0, 0, 0.1);
+}
+
+@media (max-width: 600px) {
+    .form-row {
+        flex-direction: column;
+    }
+
+    .half-width, .quarter-width {
+        flex: 1 1 100%;
+        min-width: 100%;
+    }
+}
+</style>
+{% endblock %}
