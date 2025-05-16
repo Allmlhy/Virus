@@ -25,11 +25,11 @@ pip install flask pymysql
 
 如`中国-2025-5-16`
 
-![global](.\pic\global.jpg)
+![global](./pic/global.jpg)
 
-![global_date](.\pic\global_date.jpg)
+![global_date](./pic/global_date.jpg)
 
-![global_date_country_stats](.\pic\global_date_country_stats.jpg)
+![global_date_country_stats](./pic/global_date_country_stats.jpg)
 
 中国疫情数据播报页，可以依次选择省份、日期进行查看，查看到的信息包括：
 
@@ -40,18 +40,18 @@ pip install flask pymysql
 
 如`云南-2021-12-25`
 
-![china](.\pic\china.jpg)
+![china](./pic/china.jpg)
 
-![china_date](.\pic\china_date.jpg)
+![china_date](./pic/china_date.jpg)
 
 中国疫情数据录入页.
 
 依次输入报告日期、省份、城市（地级市）、新增确诊、新增死亡、新增治愈和疑似病例，同一省份\城市\日期不能够重复填写.
 
-![add_china](.\pic\add_china.jpg)
+![add_china](./pic/add_china.jpg)
 
 世界疫情数据录入页.
 
 依次输入报告日期、国家名、新增确诊、累计确诊、新增死亡和累计死亡，同一国家\日期不能够重复填写.
 
-![add_country](.\pic\add_country.jpg)
+![add_country](./pic/add_country.jpg)
