@@ -129,6 +129,12 @@
                 <artifactId>spring-kafka</artifactId>
         </dependency>
 
+        <!-- Maven依赖示例 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>1.9.0</version>
+        </dependency>
 
 
     </dependencies>
