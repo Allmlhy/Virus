@@ -15,7 +15,11 @@ lazy val root = (project in file("."))
       "org.apache.spark" %% "spark-streaming-kafka-0-10" % "3.3.2",  // 注意这里的版本要和Spark版本匹配
 
       // MySQL 连接器
-      "mysql" % "mysql-connector-java" % "8.0.33"
+      "mysql" % "mysql-connector-java" % "8.0.33",
+
+      // Apache Commons CSV
+      "org.apache.commons" % "commons-csv" % "1.9.0"
+
     ),
     resolvers ++= Seq(
       "Apache Snapshots" at "https://repository.apache.org/snapshots/"
