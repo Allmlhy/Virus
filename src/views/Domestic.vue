@@ -1,210 +1,144 @@
+<script setup>
+import { ref, watch } from 'vue'
+import NavBar from "@/components/NavBar.vue";
+import TimePicker from '@/components/TimePicker/TimePicker.vue';
+import ChinaCovidMap from '@/components/Map/ChinaCovidMap.vue';
+import ProvinceTable from '@/components/Table/ProvinceTable.vue';  // 新增表格组件
+import { fetchProvinceStats } from '@/apis/covid.js';
+import TodaySummary from '@/components/Table/TodaySummary.vue';
+const selectedTime = ref({
+  year: 'all',
+  month: 'all',
+  day: 'all'
+});
+
+const covidData = ref(null);
+const initialData = ref(null);  // 新增固定数据
+
+const fetchData = async (params = {}) => {
+  try {
+    const data1 = await fetchProvinceStats(params);
+
+    covidData.value = data1;
+    if (!initialData.value) {
+      // 只赋值一次
+      initialData.value = JSON.parse(JSON.stringify(data1));
+    }
+    console.log("请求数据1：", data1)
+  } catch (error) {
+    console.error('请求疫情数据失败:', error);
+  }
+};
+
+fetchData();
+
+watch(() => selectedTime.value.day, (newDay) => {
+  fetchData(selectedTime.value);
+});
+
+const handleTimeChange = (time) => {
+  selectedTime.value = time;
+};
+</script>
+
 <template>
   <div class="domestic">
     <NavBar />
-    <div class="container">
-      <h2>国内疫情指标</h2>
+    <h2>国内疫情指标</h2>
+    <p>这里显示国内疫情的相关数据。</p>
+    <div class="container layout">
+      <div class="left-panel">
 
-      <div class="summary-container">
-        <div class="summary-box">
-          <p class="compare">较昨日 <span class="up">+30</span></p>
-          <p class="number red">125073</p>
-          <p class="label">累计确诊</p>
-        </div>
-        <div class="summary-box">
-          <p class="compare">较昨日 <span class="up">+25</span></p>
-          <p class="number orange">9303</p>
-          <p class="label">现存疑似</p>
-        </div>
-        <div class="summary-box">
-          <p class="compare">较昨日 <span class="down">-8</span></p>
-          <p class="number blue">361</p>
-          <p class="label">现存重症</p>
-        </div>
-        <div class="summary-box">
-          <p class="compare">较昨日 <span class="same">0</span></p>
-          <p class="number darkblue">800</p>
-          <p class="label">累计死亡数</p>
-        </div>
-        <div class="summary-box">
-          <p class="compare">较昨日 <span class="up">+20</span></p>
-          <p class="number green">2500</p>
-          <p class="label">累计治愈数</p>
-        </div>
+        <TimePicker class="time-picker" @time-change="handleTimeChange" />
+        <ChinaCovidMap :rawData="covidData" />
+
       </div>
-
-
-<!--      <p>这里显示国内疫情的相关数据。</p>-->
-
-      <div class="map-wrapper">
-        <div class="map-container" ref="chartContainer">
-          <p v-if="!isMapLoaded">地图加载中...</p>
-        </div>
-        <div class="right-placeholder">
-          <!-- 可用于后续补充图表、说明等 -->
-        </div>
+      <div class="right-panel">
+        <h3>📊 省份疫情数据</h3>
+        <ProvinceTable :provinceData="initialData" />
       </div>
-
     </div>
+    <TodaySummary />
+
   </div>
 </template>
 
-<script setup>
-import NavBar from "@/components/NavBar.vue";
-import { ref, onMounted } from 'vue';
-import * as echarts from 'echarts';
-import chinaMap from '@/assets/map/china.json';
-
-const chartContainer = ref(null);
-const isMapLoaded = ref(false);
-
-onMounted(() => {
-  const chart = echarts.init(chartContainer.value);
-  echarts.registerMap('china', chinaMap);
-
-  const option = {
-    tooltip: {
-      trigger: 'item',
-      formatter: '{b}: {c}'
-    },
-    visualMap: {
-      min: 0,
-      max: 1000,
-      left: 'left',
-      top: 'bottom',
-      text: ['高', '低'],
-      calculable: true
-    },
-    series: [{
-      name: '确诊数',
-      type: 'map',
-      map: 'china',
-      label: {
-        show: true
-      },
-      data: [
-        { name: '北京', value: 123 },
-        { name: '上海', value: 321 },
-        { name: '广东', value: 654 }
-      ]
-    }]
-  };
-
-  chart.setOption(option);
-  isMapLoaded.value = true;
-});
-</script>
-
 <style scoped>
-.container {
-  padding-top: 60px;
-  margin: 0 20px;
+.container.layout {
+  display: flex;
+  gap: 24px;
+  height: calc(100vh - 60px);
+  padding: 16px 24px;
+  box-sizing: border-box;
+  background-color: #f9fafb;
+  /* 轻微灰白背景，避免纯白过刺眼 */
+}
+
+.left-panel {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: #fff;
+  border-radius: 8px;
+  padding: 16px;
+  box-sizing: border-box;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.05);
+  overflow: hidden;
+}
+
+.time-picker {
+  margin-bottom: 12px;
+}
+
+.left-panel>ChinaCovidMap {
+  flex-grow: 1;
+  /* 地图撑满剩余高度 */
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 1px 6px rgb(0 0 0 / 0.1);
+}
+
+
+.right-panel {
+  /* 去掉 overflow-y */
+  width: 380px;
+  background: #fff;
+  border-radius: 8px;
+  padding: 16px;
+  box-sizing: border-box;
+  box-shadow: 0 2px 12px rgb(0 0 0 / 0.1);
+  /* 不加 overflow */
+  overflow: hidden;
+}
+
+.right-panel::-webkit-scrollbar {
+  width: 8px;
+}
+
+.right-panel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.right-panel::-webkit-scrollbar-thumb {
+  background-color: #94a3b8;
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: content-box;
 }
 
 h2 {
-  text-align: center;
+  margin: 16px 24px 8px;
+  font-weight: 700;
+  font-size: 28px;
+  color: #222;
 }
 
-.summary-container {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 12px;
-  padding: 10px 0;
-  margin: 10px 0 20px;
-  border-top: 1px solid #eaeaea;
-  border-bottom: 1px solid #eaeaea;
-}
-
-.summary-box {
-  width: 130px;
-  padding: 8px 6px;
-  text-align: center;
-  background: #fafafa;
-  border: 1px solid #eee;
-  border-radius: 6px;
-}
-
-.compare {
-  font-size: 12px;
-  color: #888;
-  margin-bottom: 4px;
-}
-
-.compare .up {
-  color: #c9302c;
-}
-
-.compare .down {
-  color: #5bc0de;
-}
-
-.compare .same {
-  color: #999;
-}
-
-.number {
-  font-size: 18px;
-  font-weight: bold;
-  margin: 2px 0;
-}
-
-.label {
-  font-size: 13px;
-  color: #333;
-}
-
-.red { color: #c9302c; }
-.orange { color: #f0ad4e; }
-.blue { color: #5bc0de; }
-.darkblue { color: #337ab7; }
-.green { color: #5cb85c; }
-
-
-.darkblue {
-  color: #337ab7;
-}
-
-.green {
-  color: #5cb85c;
-}
-
-.label {
-  font-size: 16px;
-  color: #333;
-}
-
-.map-container {
-  height: 400px;
-  background-color: #f0f0f0;
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 18px;
-  color: #666;
-}
-
-.data-container {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  margin-top: 20px;
-}
-
-.data-box {
-  background-color: #fff;
-  border: 1px solid #ddd;
-  padding: 10px;
-  text-align: center;
-}
-
-.data-box h3 {
-  margin: 0;
-  color: #333;
-}
-
-.data-box p {
-  margin-top: 10px;
+p {
+  margin: 0 24px 24px;
   color: #555;
+  font-size: 16px;
+  line-height: 1.5;
+  user-select: none;
 }
 </style>

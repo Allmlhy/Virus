@@ -1,34 +1,103 @@
 <template>
-  <nav class="navbar">
-    <div class="logo">
-      <img src="@/assets/logo.svg" alt="Logo" />
-      <span>疫情监测系统</span>
+  <div>
+    <!-- 加载动画遮罩 -->
+    <div v-if="isLoading" class="loading-overlay">
+      <div class="spinner"></div>
     </div>
-    <ul class="nav-links">
-      <li>
-        <router-link to="/" :class="{ active: isActive('/') }">首页</router-link>
-      </li>
-      <li>
-        <router-link to="/global" :class="{ active: isActive('/global') }">国际</router-link>
-      </li>
-      <li>
-        <router-link to="/domestic" :class="{ active: isActive('/domestic') }">国内</router-link>
-      </li>
-      <li>
-        <router-link to="/search" :class="{ active: isActive('/search') }">检索</router-link>
-      </li>
-    </ul>
-  </nav>
+
+    <!-- 页面主体，跳转时隐藏 -->
+    <div v-show="!isLoading" class="page-content">
+      <nav class="navbar">
+        <div class="logo">
+          <img src="@/assets/logo.svg" alt="Logo" />
+          <span>疫情监测系统</span>
+        </div>
+        <ul class="nav-links">
+          <li>
+            <a
+                href="/"
+                :class="{ active: isActive('/') }"
+                @click.prevent="refresh('/')"
+            >首页</a>
+          </li>
+          <li>
+            <a
+                href="/global"
+                :class="{ active: isActive('/global') }"
+                @click.prevent="refresh('/global')"
+            >国际</a>
+          </li>
+          <li>
+            <a
+                href="/domestic"
+                :class="{ active: isActive('/domestic') }"
+                @click.prevent="refresh('/domestic')"
+            >国内</a>
+          </li>
+          <li>
+            <a
+                href="/search"
+                :class="{ active: isActive('/search') }"
+                @click.prevent="refresh('/search')"
+            >检索</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import { useRoute } from 'vue-router'
+
 const route = useRoute()
 const isActive = (path) => route.path === path
+
+const isLoading = ref(false)
+
+const refresh = (path) => {
+  isLoading.value = true
+  setTimeout(() => {
+    window.location.href = path
+  }, 300) // 加载动画持续时间
+}
 </script>
 
 <style scoped>
-/* 使 Navbar 固定在顶部 */
+/* 页面内容隐藏时显示全屏加载层 */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.8);
+  z-index: 9999;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 旋转动画的圆圈 */
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #999;
+  border-top-color: #0d47a1; /* 深蓝色 */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* 旋转关键帧 */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 保持你的原样式不变 */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -44,9 +113,8 @@ const isActive = (path) => route.path === path
   z-index: 1000;
 }
 
-/* 保证页面主体内容不会被遮挡 */
 body {
-  padding-top: 60px; /* 给页面顶部加上与导航栏相同的高度 */
+  padding-top: 60px;
 }
 
 .logo {
@@ -83,15 +151,14 @@ body {
   text-decoration: none;
   color: #333;
   padding: 8px 14px;
-  /* 设置四个角的圆角 */
-  border-radius: 20px; /* 增大圆角效果 */
+  border-radius: 20px;
   transition: background-color 0.3s;
   display: flex;
   align-items: center;
   height: 100%;
   position: relative;
   background-color: transparent;
-  box-sizing: border-box; /* 确保 padding 不影响宽高 */
+  box-sizing: border-box;
 }
 
 .nav-links a:hover {
@@ -102,24 +169,22 @@ body {
   color: #fff;
 }
 
-/* 书签激活样式颜色 */
-.nav-links a.active[href="/"] {
+.nav-links a.active[href='/'] {
   background-color: #2e7d32;
 }
 
-.nav-links a.active[href="/global"] {
+.nav-links a.active[href='/global'] {
   background-color: #b71c1c;
 }
 
-.nav-links a.active[href="/domestic"] {
+.nav-links a.active[href='/domestic'] {
   background-color: #0d47a1;
 }
 
-.nav-links a.active[href="/search"] {
+.nav-links a.active[href='/search'] {
   background-color: #4a148c;
 }
 
-/* 伪元素：下凸圆角，模拟书签标签 */
 .nav-links a.active::after {
   content: '';
   position: absolute;
@@ -132,7 +197,6 @@ body {
   border-radius: 50%;
 }
 
-/* 防止点击时尺寸变化，保持尺寸一致 */
 .nav-links a.active {
   transform: none;
   box-shadow: none;
