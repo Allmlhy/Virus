@@ -6,6 +6,7 @@ COVID-19 预测接口服务
 项目结构
 --------
 
+```
 .
 ├── main.py                        # FastAPI 接口主文件
 ├── models/
@@ -18,6 +19,8 @@ COVID-19 预测接口服务
 │   ├── model_LSTM_checkpoint.pth          # LSTM 模型权重
 │   ├── model_GRU_checkpoint.pth           # GRU 模型权重
 │   └── model_Transformer_checkpoint.pth   # Transformer 模型权重
+```
+
 
 依赖安装
 --------
