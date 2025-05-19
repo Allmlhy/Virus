@@ -2,7 +2,6 @@ package com.dhr.maven.virus_backend.service.Impl;
 
 import com.dhr.maven.virus_backend.exception.DataNotFoundException;
 import com.dhr.maven.virus_backend.pojo.DateDim;
-import com.dhr.maven.virus_backend.pojo.Region;
 import com.dhr.maven.virus_backend.repository.DailyStatsRepository;
 import com.dhr.maven.virus_backend.repository.DateDimRepository;
 import com.dhr.maven.virus_backend.repository.HistoricalStatsRepository;
@@ -115,10 +114,10 @@ public class StatsServiceImpl implements StatsService {
             }
 
             // 取累计数据（historical_stats）
-            Integer totalConfirmed = historicalStatsRepository.findTotalConfirmedByDateAndRegions(date.getDateId(), cityIds).orElse(0);
-            Integer totalDead = historicalStatsRepository.findTotalDeadByDateAndRegions(date.getDateId(), cityIds).orElse(0);
-            Integer totalCured = historicalStatsRepository.findTotalCuredByDateAndRegions(date.getDateId(), cityIds).orElse(0);
-            Integer totalImported = historicalStatsRepository.findTotalImportedByDateAndRegions(date.getDateId(), cityIds).orElse(0);
+            Integer totalConfirmed = historicalStatsRepository.findTotalConfirmedUpToDateByRegions(date.getDateId(), cityIds);
+            Integer totalDead = historicalStatsRepository.findTotalDeadUpToDateByRegions(date.getDateId(), cityIds);
+            Integer totalCured = historicalStatsRepository.findTotalRecoveredUpToDateByRegions(date.getDateId(), cityIds);
+            Integer totalImported = historicalStatsRepository.findTotalImportedUpToDateByRegions(date.getDateId(), cityIds);
 
             // 取新增数据（daily_stats）
             Integer newConfirmed = dailyStatsRepository.findNewConfirmedByDateAndRegions(date.getDateId(), cityIds).orElse(0);

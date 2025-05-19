@@ -11,77 +11,39 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public interface HistoricalStatsRepository extends JpaRepository<HistoricalStats, Integer> {
-    @Query(value =
-            "SELECT COALESCE(SUM(h.total_confirmed), 0) " +
-                    "FROM historical_stats h " +
-                    "JOIN ( " +
-                    "    SELECT region_id, MAX(date_id) AS latest_date " +
-                    "    FROM historical_stats " +
-                    "    WHERE date_id <= :dateId AND region_id IN (:regionIds) " +
-                    "    GROUP BY region_id " +
-                    ") latest " +
-                    "ON h.region_id = latest.region_id AND h.date_id = latest.latest_date",
-            nativeQuery = true)
-    Integer findTotalConfirmedUpToDateByRegions(
+public interface HistoricalStatsRepositoryBackup extends JpaRepository<HistoricalStats, Integer> {
+
+    @Query("SELECT COALESCE(SUM(h.totalConfirmed), 0) " +
+            "FROM HistoricalStats h " +
+            "WHERE h.date.dateId = :dateId AND h.region.regionId IN :regionIds")
+    Optional<Integer> findTotalConfirmedByDateAndRegions(
             @Param("dateId") Integer dateId,
             @Param("regionIds") List<Integer> regionIds
     );
 
-
-
-    @Query(value =
-            "SELECT COALESCE(SUM(h.total_deaths), 0) " +
-                    "FROM historical_stats h " +
-                    "JOIN ( " +
-                    "    SELECT region_id, MAX(date_id) AS latest_date " +
-                    "    FROM historical_stats " +
-                    "    WHERE date_id <= :dateId AND region_id IN (:regionIds) " +
-                    "    GROUP BY region_id " +
-                    ") latest " +
-                    "ON h.region_id = latest.region_id AND h.date_id = latest.latest_date",
-            nativeQuery = true)
-    Integer findTotalDeadUpToDateByRegions(
+    @Query("SELECT COALESCE(SUM(h.totalDeaths), 0) " +
+            "FROM HistoricalStats h " +
+            "WHERE h.date.dateId = :dateId AND h.region.regionId IN :regionIds")
+    Optional<Integer> findTotalDeadByDateAndRegions(
             @Param("dateId") Integer dateId,
             @Param("regionIds") List<Integer> regionIds
     );
 
-
-    @Query(value =
-            "SELECT COALESCE(SUM(h.total_recovered), 0) " +
-                    "FROM historical_stats h " +
-                    "JOIN ( " +
-                    "    SELECT region_id, MAX(date_id) AS latest_date " +
-                    "    FROM historical_stats " +
-                    "    WHERE date_id <= :dateId AND region_id IN (:regionIds) " +
-                    "    GROUP BY region_id " +
-                    ") latest " +
-                    "ON h.region_id = latest.region_id AND h.date_id = latest.latest_date",
-            nativeQuery = true)
-    Integer findTotalRecoveredUpToDateByRegions(
+    @Query("SELECT COALESCE(SUM(h.totalRecovered), 0) " +
+            "FROM HistoricalStats h " +
+            "WHERE h.date.dateId = :dateId AND h.region.regionId IN :regionIds")
+    Optional<Integer> findTotalCuredByDateAndRegions(
             @Param("dateId") Integer dateId,
             @Param("regionIds") List<Integer> regionIds
     );
 
-
-
-
-    @Query(value =
-            "SELECT COALESCE(SUM(h.total_imported), 0) " +
-                    "FROM historical_stats h " +
-                    "JOIN ( " +
-                    "    SELECT region_id, MAX(date_id) AS latest_date " +
-                    "    FROM historical_stats " +
-                    "    WHERE date_id <= :dateId AND region_id IN (:regionIds) " +
-                    "    GROUP BY region_id " +
-                    ") latest " +
-                    "ON h.region_id = latest.region_id AND h.date_id = latest.latest_date",
-            nativeQuery = true)
-    Integer findTotalImportedUpToDateByRegions(
+    @Query("SELECT COALESCE(SUM(h.totalImported), 0) " +
+            "FROM HistoricalStats h " +
+            "WHERE h.date.dateId = :dateId AND h.region.regionId IN :regionIds")
+    Optional<Integer> findTotalImportedByDateAndRegions(
             @Param("dateId") Integer dateId,
             @Param("regionIds") List<Integer> regionIds
     );
-
     /**
      * 获取各区域最新日期的统计数据
      */

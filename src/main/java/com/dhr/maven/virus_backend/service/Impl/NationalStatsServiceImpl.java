@@ -2,7 +2,7 @@ package com.dhr.maven.virus_backend.service.Impl;
 
 import com.dhr.maven.virus_backend.dto.NationalStatsDTO;
 import com.dhr.maven.virus_backend.pojo.HistoricalStats;
-import com.dhr.maven.virus_backend.repository.HistoricalStatsRepository;
+import com.dhr.maven.virus_backend.repository.HistoricalStatsRepositoryBackup;
 import com.dhr.maven.virus_backend.repository.DailyStatsRepository;
 import com.dhr.maven.virus_backend.service.NationalStatsService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,7 +20,7 @@ public class NationalStatsServiceImpl implements NationalStatsService {
     private static final String REDIS_KEY = "national_stats";
 
     @Autowired
-    private HistoricalStatsRepository historicalStatsRepository;
+    private HistoricalStatsRepositoryBackup historicalStatsRepository;
 
     @Autowired
     private DailyStatsRepository dailyStatsRepository;
