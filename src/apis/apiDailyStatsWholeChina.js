@@ -4,7 +4,7 @@ export const fetchDailyStatsWholeChina = async (params) => {
     console.log('fetchDailyStats 请求参数:', params);  // 打印请求参数
     try {
         const res = await new Promise((resolve, reject) => {
-            axios.get('http://localhost:8082/api/barchart/timeseries/dailyStats_wholechina', { params })
+            axios.get('http://localhost:8081/api/barchart/timeseries/dailyStats_wholechina', { params })
                 .then(response => {
                     console.log('fetchDailyStats 返回数据:', response.data);  // 打印返回数据
                     resolve(response.data);

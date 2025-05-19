@@ -11,7 +11,7 @@ export const fetchMonthlyWholeChinaSummary = async ({ startMonth, endMonth }) =>
     console.log('fetchMonthlyWholeChinaSummary 请求参数:', { startMonth, endMonth });
 
     try {
-        const response = await axios.get('http://localhost:8082/api/barchart/monthly_wholechina/summary', {
+        const response = await axios.get('http://localhost:8081/api/barchart/monthly_wholechina/summary', {
             params: { startMonth, endMonth }
         });
         console.log('fetchMonthlyWholeChinaSummary 返回数据:', response.data);

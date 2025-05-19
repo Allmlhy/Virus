@@ -188,7 +188,7 @@ watch(selectedMetrics, () => {
             <div class="metric-selector">
                 <label v-for="m in allMetrics" :key="m.key" class="checkbox">
                     <input type="checkbox" v-model="selectedMetrics" :value="m.key"
-                        @change="selectedProvince.value ? drawChart() : drawProvinceChart()" />
+                           @change="selectedProvince ? drawChart() : drawProvinceChart()" />
                     {{ m.label }}
                 </label>
             </div>
