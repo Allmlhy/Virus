@@ -10,3 +10,10 @@ app.use(router);  // 使用路由插件
 app.use(Echarts); // 使用 Echarts 插件
 
 app.mount('#app');
+
+
+
+
+
+
+

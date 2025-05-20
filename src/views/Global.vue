@@ -1,30 +1,16 @@
 <template>
   <div class="international">
-    <div class="navbar-class">
-      <NavBar />
-    </div>
+    <NavBar />
     <div class="container">
       <h2>国际疫情指标</h2>
-      <p>这里显示全球疫情的相关数据。</p>
-      <div class="map-container" ref="chartContainer" style="height: 400px;">
-        <p v-if="!isMapLoaded">地图加载中...</p>
-      </div>
-      <div class="data-container">
-        <div class="data-box">
-          <h3>全球每日死亡数</h3>
-          <p>模拟数据：10000</p>
+      <DateAndStats />
+      <!-- 使用一个容器包裹地图和柱形图 -->
+      <div class="map-chart-wrapper">
+        <div class="map-container">
+          <AMapCountryMap @countryClick="handleCountryClick" />
         </div>
-        <div class="data-box">
-          <h3>全球每日确诊数</h3>
-          <p>模拟数据：50000</p>
-        </div>
-        <div class="data-box">
-          <h3>全球总接种数量</h3>
-          <p>模拟数据：3000000</p>
-        </div>
-        <div class="data-box">
-          <h3>全球每日治愈数</h3>
-          <p>模拟数据：45000</p>
+        <div class="bar-chart-container">
+          <BarChart />
         </div>
       </div>
     </div>
@@ -33,64 +19,24 @@
 
 <script setup>
 import NavBar from "@/components/NavBar.vue";
-import { ref, onMounted } from "vue";
-import * as echarts from "echarts";
-import worldMap from "@/assets/map/world.json"; // ✅ 使用你的路径
+import AMapCountryMap from "@/components/AMapCountryMap_TopBar.vue";
+import DateAndStats from "@/components/DateAndStats.vue";
+import BarChart from "@/components/BarChart.vue";
+import { useRouter } from "vue-router";
 
-const chartContainer = ref(null);
-const isMapLoaded = ref(false);
+const router = useRouter();
 
-onMounted(() => {
-  const chart = echarts.init(chartContainer.value);
-  echarts.registerMap("world", worldMap);
+// 地图点击事件处理
+function handleCountryClick(countryName) {
+  console.log("点击国家:", countryName);
+  const countryNameForPath = encodeURIComponent(countryName.replace(/\s+/g, ""));
 
-  const option = {
-    tooltip: {
-      trigger: "item",
-      formatter: "{b}: {c}"
-    },
-    visualMap: {
-      min: 0,
-      max: 100000,
-      text: ["高", "低"],
-      realtime: false,
-      calculable: true,
-      inRange: {
-        color: ["#e0ffff", "#006edd"]
-      }
-    },
-    series: [
-      {
-        name: "确诊数",
-        type: "map",
-        map: "world",
-        roam: true,
-        emphasis: {
-          label: {
-            show: true
-          }
-        },
-        data: [
-          { name: "United States", value: 20000 },
-          { name: "India", value: 15000 },
-          { name: "Brazil", value: 12000 },
-          { name: "China", value: 800 },
-          { name: "Russia", value: 9000 }
-        ]
-      }
-    ]
-  };
-
-  chart.setOption(option);
-  isMapLoaded.value = true;
-});
+  // 用路由跳转，假设路由规则 /country/:name
+  router.push(`/country/${countryNameForPath}`).catch(() => {});
+}
 </script>
 
 <style scoped>
-.navbar-class {
-  padding: 40px 0;
-}
-
 .container {
   margin: 20px;
 }
@@ -99,19 +45,28 @@ h2 {
   text-align: center;
 }
 
-.map-container {
-  margin-top: 20px;
+.map-chart-wrapper {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 18px;
-  color: #666;
-  background-color: #f0f0f0;
+  justify-content: space-between;
+  margin-top: 20px;
+  width: 100%;
+  gap: 20px; /* 增加地图和图表之间的间距 */
+  border-radius: 10px; /* 圆角效果 */
+  border: 1px solid var(--color-border); /* 边框 */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 阴影效果 */
+  background-color: var(--color-background-soft); /* 背景颜色 */
+  padding: 20px;
+  height: 1200px;
+}
+
+.map-container {
+  flex: 1; /* 地图占据可用空间 */
+  height: 100%; /* 固定地图高度 */
 }
 
 .data-container {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: repeat(4, 1fr);
   gap: 20px;
   margin-top: 20px;
 }
@@ -121,6 +76,7 @@ h2 {
   border: 1px solid #ddd;
   padding: 10px;
   text-align: center;
+  border-radius: 8px;
 }
 
 .data-box h3 {
@@ -131,5 +87,22 @@ h2 {
 .data-box p {
   margin: 10px 0 0;
   color: #555;
+}
+
+/* 响应式样式 */
+@media (max-width: 768px) {
+  .map-chart-wrapper {
+    flex-direction: column; /* 小屏设备下地图和图表堆叠显示 */
+    gap: 10px; /* 更小的间距 */
+  }
+
+  .map-container {
+    flex: 0 0 100%; /* 地图占满100%宽度 */
+  }
+
+  .bar-chart-container {
+    flex: 0 0 100%; /* 图表占满100%宽度 */
+    height: 300px; /* 调整图表高度 */
+  }
 }
 </style>

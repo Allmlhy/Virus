@@ -4,32 +4,8 @@
       <NavBar />
     </div>
 
-    <!-- 标题与卡片整体绑定并水平居中 -->
-    <div class="header-summary-wrapper">
-      <h2 class="summary-title">今日国内疫情指标速递</h2>
-      <div class="summary-container">
-        <div class="summary-box">
-          <p class="compare">较昨日 <span class="up">+30</span></p>
-          <p class="number red">125073</p>
-          <p class="label">累计确诊</p>
-        </div>
-        <div class="summary-box">
-          <p class="compare">较昨日 <span class="up">+25</span></p>
-          <p class="number orange">9303</p>
-          <p class="label">现存疑似</p>
-        </div>
-        <div class="summary-box">
-          <p class="compare">较昨日 <span class="same">0</span></p>
-          <p class="number darkblue">800</p>
-          <p class="label">累计死亡数</p>
-        </div>
-        <div class="summary-box">
-          <p class="compare">较昨日 <span class="up">+20</span></p>
-          <p class="number green">2500</p>
-          <p class="label">累计治愈数</p>
-        </div>
-      </div>
-    </div>
+    <!-- 用TodaySummary组件替代疫情指标卡片 -->
+    <DomesticSummary />
 
     <!-- 时间选择器、地图、表格 -->
     <div class="top-section layout">
@@ -52,15 +28,11 @@
       <MonthlyCityCovidBarChart :queryParams="queryParams" style="flex: 1;" />
     </div>
 
-
     <!-- 饼图区域 + 省份对比图并排展示 -->
     <div class="charts-container">
       <PieChart :queryParams="queryParams" style="flex: 1;"/>
       <ProvincePK :queryParams="queryParams" style="flex: 1;"/>
     </div>
-
-<!--    &lt;!&ndash; 汇总表 &ndash;&gt;-->
-<!--    <TodaySummary />-->
   </div>
 </template>
 
@@ -71,13 +43,14 @@ import NavBar from "@/components/NavBar.vue";
 import TimePicker from '@/components/TimePicker/TimePicker.vue';
 import ChinaCovidMap from '@/components/Map/ChinaCovidMap.vue';
 import ProvinceTable from '@/components/Table/ProvinceTable.vue';
-import TodaySummary from '@/components/Table/TodaySummary.vue';
+import TodaySummary from '@/components/DomesticSummary/DomesticSummary.vue';
 import PieChart from "@/components/PieChart.vue";
 import BarChart from "@/components/DailyStatsBarChart.vue";
 import MonthlyCityCovidBarChart from "@/components/MonthlyCityCovidBarChart.vue";
 import ProvincePK from "@/components/ProvincePK.vue";
 
 import { fetchProvinceStats } from '@/apis/covid.js';
+import DomesticSummary from "@/components/DomesticSummary/DomesticSummary.vue";
 
 const isMapLoaded = ref(false);
 
@@ -134,80 +107,7 @@ onMounted(() => {
   background-color: #fff;
 }
 
-.header-summary-wrapper {
-  display: flex;
-  justify-content: center;      /* 整体水平居中 */
-  align-items: center;          /* 垂直居中（对齐卡片高度） */
-  padding: 20px 24px 0;
-  gap: 24px;                    /* 标题与卡片间距 */
-  flex-wrap: nowrap;            /* 不换行，保持一排 */
-}
-
-.summary-title {
-  font-size: 24px;
-  font-weight: bold;
-  color: #222;
-  margin: 0;
-  white-space: nowrap;
-  /* 去掉 padding-top，改为垂直居中 */
-  line-height: 1;               /* 减少行高，方便对齐 */
-  display: flex;
-  align-items: center;          /* 文字垂直居中 */
-}
-
-
-.summary-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.summary-box {
-  width: 130px;
-  padding: 8px 6px;
-  text-align: center;
-  background: rgba(250, 250, 250, 0.92);
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-  backdrop-filter: blur(2px);
-  transition: box-shadow 0.3s ease;
-}
-
-.compare {
-  font-size: 12px;
-  color: #888;
-  margin-bottom: 4px;
-}
-
-.compare .up {
-  color: #c9302c;
-}
-
-.compare .down {
-  color: #5bc0de;
-}
-
-.compare .same {
-  color: #999;
-}
-
-.number {
-  font-size: 18px;
-  font-weight: bold;
-  margin: 2px 0;
-}
-
-.label {
-  font-size: 13px;
-  color: #333;
-}
-
-.red { color: #c9302c; }
-.orange { color: #f0ad4e; }
-.blue { color: #5bc0de; }
-.darkblue { color: #337ab7; }
-.green { color: #5cb85c; }
+/* 这部分疫情卡片相关样式已移除，改由TodaySummary组件自己管理 */
 
 /* 顶部结构 */
 .top-section.layout {
@@ -254,5 +154,4 @@ onMounted(() => {
   justify-content: space-between;
   margin: 40px 24px 0;
 }
-
 </style>

@@ -1,7 +1,17 @@
 <!DOCTYPE html>
 <html lang="">
   <head>
-    <meta charset="UTF-8">
+      <!-- public/index.html 中的 <head> 标签内添加 -->
+      <!-- public/index.html -->
+      <!-- ✅ 必须放在 AMap SDK 加载前 -->
+      <script type="text/javascript">
+          window._AMapSecurityConfig = {
+              securityJsCode: "6f51bec23b46b755a253d999e7f6dcc9",
+          };
+      </script>
+      <script src="https://webapi.amap.com/maps?v=2.0&key=b0ebc46074a1d25a16330f47ed6d3fc2&plugin=AMap.Geocoder,AMap.Scale,AMap.ToolBar"></script>
+      <script src="https://webapi.amap.com/ui/1.1/main.js"></script>
+      <meta charset="UTF-8">
     <link rel="icon" href="/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vite App</title>

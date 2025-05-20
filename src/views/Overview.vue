@@ -1,7 +1,6 @@
 <template>
   <div class="page-wrapper">
     <NavBar />
-
     <div class="carousel-container">
       <!-- 标题点击弹窗 -->
       <h1 class="typing-title" @click="showSearchModal = true" style="cursor: pointer;">
@@ -40,6 +39,7 @@
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import NavBar from '@/components/NavBar.vue';
 import SearchModal from '@/components/SearchModal/SearchModal.vue'
+import CountryCard from '@/components/CountryCard/CountryCard.vue'
 
 const newsList = [
   {
@@ -58,9 +58,9 @@ const newsList = [
     url: 'https://news.un.org/zh/story/2024/08/1130451'
   },
   {
-    title: '各国防疫政策更新',
-    image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80',
-    url: 'https://news.example.com/policy-updates'
+    title: '新冠阳性率升高！钟南山紧急提醒！本轮何时结束',
+    image: 'https://inews.gtimg.com/om_bt/Oolgsr5dV6bmiqDjMkJuLnLzo8-8yN2BSMxgeqhrz6MEEAA/641',
+    url: 'https://news.qq.com/rain/a/20250520A069OP00'
   },
 ];
 
