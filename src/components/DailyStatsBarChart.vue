@@ -1,19 +1,19 @@
 <template>
   <div class="chart-container">
-    <h2 class="chart-title">疫情每日趋势柱状图</h2>
+    <h2 class="chart-title">疫情每日趋势折线图</h2>
 
     <!-- 筛选控件 -->
     <div class="filters">
       <label>
         年份：
-        <select v-model="year">
+        <select v-model="year" class="select-box">
           <option v-for="y in years" :key="y" :value="y">{{ y }}</option>
         </select>
       </label>
 
       <label>
         月份：
-        <select v-model="month">
+        <select v-model="month" class="select-box">
           <option value="">全部</option>
           <option v-for="m in months" :key="m" :value="m">{{ m }}</option>
         </select>
@@ -21,7 +21,7 @@
 
       <label>
         省份：
-        <select v-model="province">
+        <select v-model="province" class="select-box">
           <option value="全国">全国</option>
           <option v-for="p in provinces" :key="p" :value="p">{{ p }}</option>
         </select>
@@ -29,15 +29,15 @@
 
       <label>
         城市：
-        <input v-model="city" placeholder="请输入城市名" class="styled-input" />
+        <input v-model="city" placeholder="请输入城市名" class="input-box" />
       </label>
     </div>
 
     <!-- 显示状态 -->
-    <div v-if="loading">加载中...</div>
-    <div v-else-if="error" style="color: red">{{ error }}</div>
-    <div v-else-if="!chartData.length">暂无数据</div>
-    <v-chart v-else :option="chartOptions" style="width: 100%; height: 400px;" />
+    <div v-if="loading" class="loading">加载中...</div>
+    <div v-else-if="error" class="error">{{ error }}</div>
+    <div v-else-if="!chartData.length" class="no-data">暂无数据</div>
+    <v-chart v-else :option="chartOptions" class="chart-box" />
   </div>
 </template>
 
@@ -45,19 +45,15 @@
 import { ref, watch, computed } from 'vue';
 import VChart from 'vue-echarts';
 import { fetchDailyStats } from '@/apis/apiDailyStats';
-import { fetchDailyStatsWholeChina } from '@/apis/apiDailyStatsWholeChina'; // 新增导入
+import { fetchDailyStatsWholeChina } from '@/apis/apiDailyStatsWholeChina';
 
-// 筛选参数，设置默认值为2020年1月，省份和城市均为上海
 const year = ref(2020);
 const month = ref(1);
 const province = ref('上海');
 const city = ref('上海');
 
-// 年份和月份选择项
 const years = Array.from({ length: 5 }, (_, i) => 2020 + i);
 const months = Array.from({ length: 12 }, (_, i) => i + 1);
-
-// 示例省份列表
 const provinces = [
   "北京", "天津", "上海", "重庆",
   "河北", "山西", "辽宁", "吉林", "黑龙江",
@@ -72,174 +68,243 @@ const loading = ref(false);
 const error = ref(null);
 const chartData = ref([]);
 
-// 加载数据函数
 async function loadData() {
-  console.log('开始加载数据，参数：', {
-    year: year.value,
-    month: month.value,
-    province: province.value,
-    city: city.value,
-  });
-
   loading.value = true;
   error.value = null;
 
   try {
     let res;
-
-    // 根据省份选择不同的API
     if (province.value === '全国') {
       res = await fetchDailyStatsWholeChina({
         year: year.value,
-        month: month.value || undefined, // 为空时传 undefined
+        month: month.value || undefined,
         province: province.value,
         city: city.value,
       });
     } else {
       res = await fetchDailyStats({
         year: year.value,
-        month: month.value || undefined, // 为空时传 undefined
+        month: month.value || undefined,
         province: province.value,
         city: city.value,
       });
     }
 
-    console.log('接口返回数据：', res);
-
     if (!Array.isArray(res)) {
-      console.warn('返回数据格式异常，预期数组，实际为：', res);
       chartData.value = [];
     } else {
       chartData.value = res;
     }
   } catch (err) {
     error.value = '数据加载失败';
-    console.error('加载数据出错：', err);
   } finally {
     loading.value = false;
-    console.log('数据加载完成');
   }
 }
 
-// 筛选条件变化时自动加载数据
 watch([year, month, province, city], loadData, { immediate: true });
 
-// 图表配置项
 const chartOptions = computed(() => {
   if (!chartData.value.length) return {};
 
   return {
-    tooltip: { trigger: 'axis' },
+    tooltip: {
+      trigger: 'axis',
+      backgroundColor: 'rgba(50,50,50,0.7)',
+      textStyle: {
+        color: '#fff'
+      }
+    },
     legend: {
       data: ['新增确诊数', '新增死亡数', '新增治愈数'],
       top: 30,
-      textStyle: { color: '#fff' }, // 图例字体颜色为白色
+      textStyle: { color: '#333' },
     },
     grid: { left: '5%', right: '5%', bottom: '8%', containLabel: true },
     xAxis: {
       type: 'category',
-      data: chartData.value.map(item => `${item.day}日`), // 修改这里，确保day是数字
+      data: chartData.value.map(item => `${item.day}日`),
       axisLabel: {
         rotate: 45,
         interval: 0,
-        color: '#fff' // 横坐标字体颜色为白色
+        color: '#333',
       },
-      axisPointer: { type: 'shadow' }, // 横坐标支持拖动
+      axisPointer: { type: 'shadow' },
+      boundaryGap: false,
     },
     yAxis: {
       type: 'value',
-      axisLabel: { color: '#fff' }, // 纵坐标字体颜色为白色
-      axisPointer: { type: 'shadow' }, // 纵坐标支持拖动
+      axisLabel: { color: '#333' },
+      axisPointer: { type: 'shadow' },
+      splitLine: {
+        lineStyle: {
+          color: '#eee'
+        }
+      }
     },
     series: [
       {
         name: '新增确诊数',
-        type: 'bar',
+        type: 'line',
         data: chartData.value.map(item => item.newConfirmed),
+        smooth: true,
+        lineStyle: { color: '#8884d8' },
         itemStyle: { color: '#8884d8' },
+        showSymbol: false,
       },
       {
         name: '新增死亡数',
-        type: 'bar',
+        type: 'line',
         data: chartData.value.map(item => item.newDeaths),
+        smooth: true,
+        lineStyle: { color: '#ff4d4f' },
         itemStyle: { color: '#ff4d4f' },
+        showSymbol: false,
       },
       {
         name: '新增治愈数',
-        type: 'bar',
+        type: 'line',
         data: chartData.value.map(item => item.newRecovered),
+        smooth: true,
+        lineStyle: { color: '#82ca9d' },
         itemStyle: { color: '#82ca9d' },
+        showSymbol: false,
       },
     ],
     dataZoom: [
-      { // 添加内部滚动条，支持横坐标范围拖动
+      {
         type: 'inside',
         xAxisIndex: [0],
-        start: 0,  // 默认显示前5个月
+        start: 0,
         end: 100,
       },
-      { // 添加滚动条，支持拖动查看其他月份
+      {
         type: 'slider',
         xAxisIndex: [0],
-        start: 0,  // 默认显示前5个月
+        start: 0,
         end: 100,
-        handleSize: '100%', // 滚动条的宽度
+        handleSize: '100%',
+        handleStyle: {
+          color: '#aaa',
+        }
       }
     ],
+    backgroundColor: '#fff',
   };
 });
 </script>
 
 <style scoped>
-h2.chart-title {
-  text-align: center; /* 标题居中 */
-  margin-bottom: 12px;
-  color: #fff;
+.chart-container {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 12px;
+  margin: 10px 0 10px 20px;
+  width: 35%;
+  min-width: 300px;
+  color: #333;
+  box-sizing: border-box;
+}
+
+.chart-title {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #333;
 }
 
 .filters {
-  margin-bottom: 16px;
   display: flex;
-  gap: 12px;
-  align-items: center;
-  justify-content: center;
   flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 10px;
+  justify-content: center;
 }
 
 label {
-  font-weight: 500;
-  color: #fff;
+  font-weight: bold;
+  color: #333;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
 }
 
-select, input {
-  margin-left: 6px;
-  padding: 4px 8px;
+.select-box,
+.input-box {
+  appearance: none;
+  background-color: #fff;
+  border: 1.5px solid #4a90e2;
+  border-radius: 8px;
+  padding: 8px 12px;
   font-size: 14px;
-  background: #eef;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.styled-input {
-  margin-left: 6px;
-  padding: 4px 8px;
-  font-size: 14px;
-  background: #eef;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.chart-container {
-  padding: 20px;
-  background: #002244;
-  color: white;
-  width: 50%; /* 容器宽度为100% */
+  color: #1a3f72;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
   box-sizing: border-box;
-  margin: 0 auto;
+  outline: none;
+  cursor: text;
+  margin-left: 6px;
 }
 
-v-chart {
+.select-box {
+  padding-right: 32px;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg fill='none' height='10' viewBox='0 0 24 24' width='10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5' stroke='%234a90e2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px 12px;
+}
+
+.select-box:hover,
+.input-box:hover {
+  border-color: #3a7bd5;
+  box-shadow: 0 0 6px rgba(58, 123, 213, 0.5);
+}
+
+.select-box:focus,
+.input-box:focus {
+  border-color: #255aab;
+  box-shadow: 0 0 8px rgba(37, 90, 171, 0.7);
+  outline: none;
+}
+
+.input-box {
+  width: 140px;
+}
+
+input::placeholder {
+  color: #8faeea;
+}
+
+input:focus::placeholder {
+  color: #3a7bd5;
+}
+
+.loading,
+.error,
+.no-data {
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.loading {
+  color: #333;
+}
+
+.error {
+  color: #ff4d4f;
+}
+
+.no-data {
+  color: #888;
+}
+
+.chart-box {
   width: 100%;
   height: 400px;
+  border: none;
+  border-radius: 8px;
 }
 </style>

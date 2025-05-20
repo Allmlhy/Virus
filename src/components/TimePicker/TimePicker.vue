@@ -97,37 +97,38 @@ defineExpose({
 
 <style scoped>
 .time-picker {
-    display: flex;
-    gap: 1rem;
-    padding: 1rem;
-    background-color: #f5faff;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.1);
-    flex-wrap: wrap;
-    justify-content: center;
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: #e6f0fa; /* 更深的蓝灰背景 */
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 72, 153, 0.15); /* 更深蓝阴影 */
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .time-picker select {
-    padding: 8px 12px;
-    border: 1px solid #cce0ff;
-    border-radius: 8px;
-    background-color: white;
-    color: #333;
-    font-size: 16px;
-    min-width: 120px;
-    outline: none;
-    transition: all 0.2s ease;
+  padding: 8px 12px;
+  border: 1px solid #6699cc;  /* 深一点的蓝色边框 */
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #222; /* 字体颜色更深 */
+  font-size: 16px;
+  min-width: 120px;
+  outline: none;
+  transition: all 0.2s ease;
 }
 
 .time-picker select:disabled {
-    background-color: #eef4fb;
-    color: #aaa;
-    border-color: #dde6f2;
+  background-color: #dde7f0;
+  color: #777;
+  border-color: #b0c4de;
 }
 
 .time-picker select:hover:not(:disabled),
 .time-picker select:focus:not(:disabled) {
-    border-color: #3399ff;
-    box-shadow: 0 0 6px rgba(51, 153, 255, 0.3);
+  border-color: #336699;
+  box-shadow: 0 0 6px rgba(51, 102, 153, 0.4); /* 加重阴影蓝色 */
 }
+
 </style>

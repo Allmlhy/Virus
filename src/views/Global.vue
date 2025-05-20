@@ -1,6 +1,8 @@
 <template>
   <div class="international">
-    <NavBar />
+    <div class="navbar-class">
+      <NavBar />
+    </div>
     <div class="container">
       <h2>国际疫情指标</h2>
       <p>这里显示全球疫情的相关数据。</p>
@@ -85,6 +87,10 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.navbar-class {
+  padding: 40px 0;
+}
+
 .container {
   margin: 20px;
 }

@@ -203,8 +203,6 @@ watch(selectedMetrics, () => {
 .province-table {
     padding: 24px;
     background: #ffffff;
-    border-radius: 16px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     max-width: 1000px;
     margin: 0 auto;
     font-family: 'Microsoft YaHei', sans-serif;
@@ -213,76 +211,118 @@ watch(selectedMetrics, () => {
     gap: 32px;
 }
 
-/* 表格区域固定高度、可滚动 */
 .table-section {
-    max-height: 300px;
-    overflow-y: auto;
-    border: 1px solid #ddd;
-    border-radius: 12px;
+  border: 1.5px solid #7aaedc;        /* 柔和蓝色边框 */
+  border-radius: 12px;
+  box-shadow: 0 3px 12px rgba(122, 174, 220, 0.25);  /* 轻柔阴影 */
+  max-height: 220px;
+  max-width: 900px;
+  overflow-y: auto;
+  margin: 0 auto;
+  background-color: #fafbfd;          /* 极浅灰蓝底 */
 }
 
-/* 表格容器宽度自动 */
 .table-container {
-    min-width: 100%;
+  min-width: 100%;
+  max-width: 900px;
+  overflow-x: auto;
 }
 
-.table-container {
-    max-height: 150px;
-    /* 固定区域大小 */
-    overflow-y: auto;
-    border-radius: 12px;
-    overflow-x: hidden;
-}
-
-/* 表格样式 */
 table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: #fbfbfb;
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;          /* 纯白背景 */
+  border: 1px solid #aac7e8;          /* 柔和边框 */
 }
 
 th,
 td {
-    padding: 12px 14px;
-    border: 1px solid #ddd;
-    text-align: center;
-    font-size: 15px;
+  padding: 12px 14px;
+  border: 1px solid #aac7e8;          /* 柔和边框 */
+  text-align: center;
+  font-size: 15px;
+  color: #405a7a;                     /* 深灰蓝字体 */
+  transition: color 0.3s ease;
 }
 
 thead {
-    background-color: #e3f2fd;
-    color: #333;
-    font-weight: bold;
+  background-color: #a3bdd9;          /* 柔和中蓝色表头 */
+  color: #ffffff;                     /* 白色字 */
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #e8f0fb;          /* 极浅蓝交替行 */
+}
+
+tbody tr:hover {
+  background-color: #c3d6f5 !important; /* 悬浮淡蓝色 */
+  color: #1a365d;
+  font-weight: 600;
 }
 
 .clickable-row {
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease, color 0.3s ease;
 }
 
 .clickable-row:hover {
-    background-color: #e0f7fa;
-    transform: scale(1.01);
+  background-color: #a0b8e6;
+  transform: scale(1.02);
+  color: #12315a;
 }
+
 
 /* 图表区域 */
 .chart-section {
-    height: 370px;
-    position: relative;
-    background: #f9f9f9;
-    padding: 16px;
-    border-radius: 12px;
-    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.05);
+  height: 370px;
+  position: relative;
+  background: #ffffff; /* 主体改为纯白色，专业清爽 */
+  padding: 16px 20px;
+  border-radius: 12px;
+  border: 1px solid #cce4f6; /* 医学蓝边框 */
+  box-shadow: inset 0 0 10px rgba(0, 80, 160, 0.05); /* 更医学风的阴影 */
 }
 
+.chart-section h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a4c73; /* 医疗蓝，突出标题 */
+  margin-bottom: 12px;
+}
+
+/* 指标选择区域美化 */
 .metric-selector {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-bottom: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 12px;
 }
 
 .metric-selector .checkbox {
-    font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #f1f9ff;
+  border: 1px solid #b6dffe;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #185b8d;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
 }
+
+.metric-selector .checkbox:hover {
+  background-color: #d9efff;
+  border-color: #89c8f4;
+}
+
+.metric-selector input[type="checkbox"] {
+  accent-color: #3399ff; /* 医疗蓝 */
+  width: 16px;
+  height: 16px;
+}
+
 </style>

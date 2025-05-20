@@ -4,11 +4,34 @@
       <NavBar />
     </div>
 
-    <!-- 标题与描述 -->
-    <h2>国内疫情指标</h2>
-    <p class="description">这里显示国内疫情的相关数据。</p>
+    <!-- 标题与卡片整体绑定并水平居中 -->
+    <div class="header-summary-wrapper">
+      <h2 class="summary-title">今日国内疫情指标速递</h2>
+      <div class="summary-container">
+        <div class="summary-box">
+          <p class="compare">较昨日 <span class="up">+30</span></p>
+          <p class="number red">125073</p>
+          <p class="label">累计确诊</p>
+        </div>
+        <div class="summary-box">
+          <p class="compare">较昨日 <span class="up">+25</span></p>
+          <p class="number orange">9303</p>
+          <p class="label">现存疑似</p>
+        </div>
+        <div class="summary-box">
+          <p class="compare">较昨日 <span class="same">0</span></p>
+          <p class="number darkblue">800</p>
+          <p class="label">累计死亡数</p>
+        </div>
+        <div class="summary-box">
+          <p class="compare">较昨日 <span class="up">+20</span></p>
+          <p class="number green">2500</p>
+          <p class="label">累计治愈数</p>
+        </div>
+      </div>
+    </div>
 
-    <!-- 顶部布局：时间选择、地图、表格 -->
+    <!-- 时间选择器、地图、表格 -->
     <div class="top-section layout">
       <div class="left-panel">
         <TimePicker class="time-picker" @time-change="handleTimeChange" />
@@ -24,28 +47,20 @@
       </div>
     </div>
 
-    <!-- 数据指标 -->
-    <div class="data-container">
-      <div class="data-box"><h3>国内每日死亡数</h3><p>模拟数据：800</p></div>
-      <div class="data-box"><h3>国内每日确诊数</h3><p>模拟数据：4000</p></div>
-      <div class="data-box"><h3>国内总接种数量</h3><p>模拟数据：7000</p></div>
-      <div class="data-box"><h3>国内每日治愈数</h3><p>模拟数据：2500</p></div>
-    </div>
-
-    <!-- 饼图 -->
-    <PieChart v-model:queryParams="queryParams" style="margin-top: 40px;" />
-
-    <!-- 柱状图组合 -->
     <div class="charts-container">
       <BarChart :queryParams="queryParams" style="flex: 1;" />
       <MonthlyCityCovidBarChart :queryParams="queryParams" style="flex: 1;" />
     </div>
 
-    <!-- 省份对比图 -->
-    <ProvincePK :queryParams="queryParams" style="margin-top: 40px;" />
 
-    <!-- 汇总表 -->
-    <TodaySummary />
+    <!-- 饼图区域 + 省份对比图并排展示 -->
+    <div class="charts-container">
+      <PieChart :queryParams="queryParams" style="flex: 1;"/>
+      <ProvincePK :queryParams="queryParams" style="flex: 1;"/>
+    </div>
+
+<!--    &lt;!&ndash; 汇总表 &ndash;&gt;-->
+<!--    <TodaySummary />-->
   </div>
 </template>
 
@@ -112,11 +127,87 @@ onMounted(() => {
 
 <style scoped>
 .navbar-wrapper {
-  padding: 40px;
+  padding: 30px;
 }
+
 .domestic {
-  background-color: #f5f7fa;
+  background-color: #fff;
 }
+
+.header-summary-wrapper {
+  display: flex;
+  justify-content: center;      /* 整体水平居中 */
+  align-items: center;          /* 垂直居中（对齐卡片高度） */
+  padding: 20px 24px 0;
+  gap: 24px;                    /* 标题与卡片间距 */
+  flex-wrap: nowrap;            /* 不换行，保持一排 */
+}
+
+.summary-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #222;
+  margin: 0;
+  white-space: nowrap;
+  /* 去掉 padding-top，改为垂直居中 */
+  line-height: 1;               /* 减少行高，方便对齐 */
+  display: flex;
+  align-items: center;          /* 文字垂直居中 */
+}
+
+
+.summary-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.summary-box {
+  width: 130px;
+  padding: 8px 6px;
+  text-align: center;
+  background: rgba(250, 250, 250, 0.92);
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(2px);
+  transition: box-shadow 0.3s ease;
+}
+
+.compare {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 4px;
+}
+
+.compare .up {
+  color: #c9302c;
+}
+
+.compare .down {
+  color: #5bc0de;
+}
+
+.compare .same {
+  color: #999;
+}
+
+.number {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 2px 0;
+}
+
+.label {
+  font-size: 13px;
+  color: #333;
+}
+
+.red { color: #c9302c; }
+.orange { color: #f0ad4e; }
+.blue { color: #5bc0de; }
+.darkblue { color: #337ab7; }
+.green { color: #5cb85c; }
 
 /* 顶部结构 */
 .top-section.layout {
@@ -145,7 +236,6 @@ onMounted(() => {
   flex-grow: 1;
   border-radius: 6px;
   overflow: hidden;
-  box-shadow: 0 1px 6px rgb(0 0 0 / 0.1);
 }
 
 .right-panel {
@@ -156,40 +246,8 @@ onMounted(() => {
   box-shadow: 0 2px 12px rgb(0 0 0 / 0.1);
 }
 
-/* 页面标题与描述 */
-h2 {
-  text-align: center;
-  color: #222;
-  font-size: 32px;
-  font-weight: bold;
-  margin-top: 24px;
-}
-
-.description {
-  text-align: center;
-  color: #555;
-  font-size: 16px;
-  margin-bottom: 20px;
-}
-
-/* 数据指标 */
-.data-container {
-  display: flex;
-  gap: 20px;
-  justify-content: space-around;
-  margin-top: 20px;
-  padding: 0 24px;
-}
-
-.data-box {
-  background: #f8f8f8;
-  padding: 16px;
-  border-radius: 8px;
-  text-align: center;
-  width: 220px;
-}
-
 /* 图表区域 */
+
 .charts-container {
   display: flex;
   gap: 20px;
@@ -197,8 +255,4 @@ h2 {
   margin: 40px 24px 0;
 }
 
-.loading {
-  text-align: center;
-  color: #888;
-}
 </style>
