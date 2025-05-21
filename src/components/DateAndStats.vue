@@ -144,7 +144,7 @@ const fetchData = async () => {
         compareClass: differencesData?.new_doses_diff > 0 ? 'up' : (differencesData?.new_doses_diff < 0 ? 'down' : 'same'),
       },
       {
-        number: differencesData?.new_confirmed || 'N/A',
+        number: statsData?.total_confirmed || 'N/A',
         colorClass: 'red',
         label: '全球新增确诊',
         compareText: `${differencesData?.new_confirmed_diff > 0 ? '+' : ''}${differencesData?.new_confirmed_diff || 0}`,
@@ -177,7 +177,6 @@ const getColorStyle = (value) => {
 </script>
 
 <style scoped>
-
 /* 头部汇总样式 */
 .header-summary-wrapper {
   display: flex;
@@ -236,25 +235,48 @@ const getColorStyle = (value) => {
   margin-bottom: 4px;
 }
 
-.up { color: #c9302c; }
-.down { color: #5bc0de; }
-.same { color: #999; }
+.up {
+  color: #c9302c;
+}
+
+.down {
+  color: #5bc0de;
+}
+
+.same {
+  color: #999;
+}
 
 .number {
   font-size: 18px;
   font-weight: bold;
   margin: 2px 0;
 }
+
 .label {
   font-size: 13px;
   color: #333;
 }
 
-.red { color: #c9302c; }
-.green { color: #5cb85c; }
-.darkblue { color: #337ab7; }
-.orange { color: #f0ad4e; }
-.blue { color: #5bc0de; }
+.red {
+  color: #c9302c;
+}
+
+.green {
+  color: #5cb85c;
+}
+
+.darkblue {
+  color: #337ab7;
+}
+
+.orange {
+  color: #f0ad4e;
+}
+
+.blue {
+  color: #5bc0de;
+}
 
 /* 原始样式 */
 .data-container {
@@ -271,7 +293,7 @@ const getColorStyle = (value) => {
   padding: 10px;
   text-align: center;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .data-box h3 {
@@ -314,24 +336,31 @@ const getColorStyle = (value) => {
     grid-template-columns: 1fr;
   }
 }
+
 .date-picker-inline {
   display: flex;
   align-items: center;
-  gap: 4px; /* 缩小间距 */
+  gap: 4px;
+  /* 缩小间距 */
   flex-wrap: wrap;
-  font-size: 13px; /* 字体稍小 */
-  color: #666; /* 灰色，和截止时间一致 */
+  font-size: 13px;
+  /* 字体稍小 */
+  color: #666;
+  /* 灰色，和截止时间一致 */
 }
 
 .date-picker-inline select {
-  padding: 4px 8px; /* 略微缩小内边距 */
+  padding: 4px 8px;
+  /* 略微缩小内边距 */
   border: 1px solid #ccc;
   border-radius: 4px;
   background-color: #fff;
-  font-size: 13px; /* 字体大小同步 */
+  font-size: 13px;
+  /* 字体大小同步 */
   min-width: 70px;
   transition: border-color 0.2s ease;
-  color: #333; /* 保持选择文字颜色稍深，方便阅读 */
+  color: #333;
+  /* 保持选择文字颜色稍深，方便阅读 */
 }
 
 .date-picker-inline select:focus {
@@ -341,12 +370,11 @@ const getColorStyle = (value) => {
 }
 
 .date-picker-inline label {
-  margin-right: 6px; /* 略微缩小右边距 */
-  color: #666; /* 灰色 */
+  margin-right: 6px;
+  /* 略微缩小右边距 */
+  color: #666;
+  /* 灰色 */
   font-weight: 500;
   user-select: none;
 }
-
-
-
 </style>

@@ -1,7 +1,8 @@
 <template>
   <div class="container">
+    <h2 class="chart-title">全球疫情状况</h2>
     <!-- 地图容器 -->
-    <div class="map-container" ref="mapContainer" style="height: 700px;">
+    <div class="map-container" ref="mapContainer" style="height: 500px;">
       <p v-if="!isMapLoaded">地图加载中...</p>
     </div>
   </div>
@@ -84,7 +85,7 @@ function updateMap(chart) {
       calculable: true,
       inRange: {
 
-        color: ["#66cc66", "#0000FF","#ffcc00","#ff9900","#ff3300","#990000"]
+        color: ["#66cc66", "#0000FF", "#ffcc00", "#ff9900", "#ff3300", "#990000"]
       }
     },
     series: [
@@ -122,6 +123,32 @@ function updateMap(chart) {
 </script>
 
 <style scoped>
+/* 添加以下样式 */
+.chart-title {
+  color: #3b3c3c;
+  font-weight: 700;
+  font-size: 24px;
+  text-align: center;
+  margin: 10px 0 20px 0;
+  user-select: none;
+  position: relative;
+  padding-bottom: 0.8rem;
+}
+
+.chart-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: #3b82f6;
+  /* 与第二个页面下划线颜色保持一致 */
+  border-radius: 2px;
+}
+
+/* 保留原有.map-container样式 */
 .map-container {
   display: flex;
   justify-content: center;

@@ -3,23 +3,20 @@
     <NavBar />
     <div class="container">
 
+      <div class="china-map-wrapper">
+        <ChinaPopulationMap />
+      </div>
       <!-- 省市选择及按钮 -->
       <div class="test-select">
         <label for="province">选择省份：</label>
-        <select id="province" v-model="selectedProvince" @change="onProvinceChange">
-          <option value="" disabled>请选择省份</option>
-          <option v-for="prov in provinces" :key="prov" :value="prov">{{ prov }}</option>
+        <select v-model="selectedProvince" id="province">
+          <option disabled value="">请选择省份</option>
+          <option v-for="prov in provinces" :key="prov">{{ prov }}</option>
         </select>
 
-        <label for="city" style="margin-left:20px;">选择城市：</label>
-        <select
-            id="city"
-            v-model="selectedCity"
-            :disabled="!selectedProvince || cities.length === 0"
-            @change="onCityChange"
-        >
-          <option value="" disabled>请选择城市</option>
-          <option v-for="city in cities" :key="city" :value="city">{{ city }}</option>
+        <select v-model="selectedCity" id="city" @change="onCityChange">
+          <option disabled value="">请选择城市</option>
+          <option v-for="city in cities" :key="city">{{ city }}</option>
         </select>
 
         <!-- 模型选择 -->
@@ -31,156 +28,153 @@
           <option value="transformer">Transformer</option>
         </select>
 
-
         <!-- 开始预测按钮 -->
-        <button
-            class="predict-btn"
-            @click="predictData"
-            :disabled="!selectedProvince || !selectedCity"
-        >
+        <button class="predict-btn" @click="predictData" :disabled="!selectedProvince || !selectedCity">
           开始预测
         </button>
       </div>
 
       <!-- 上传状态 -->
       <p v-if="uploadStatus" class="upload-status">{{ uploadStatus }}</p>
-
       <!-- 总趋势图 -->
       <div class="chart-section">
         <h3>疫情趋势图</h3>
-        <div id="mainChart" style="width: 100%; height: 400px;"></div>
+        <!-- 骨架屏或加载提示（疫情趋势图） -->
+        <div v-if="!selectedProvince || !selectedCity" class="chart-placeholder">
+          <div class="skeleton-chart">
+            <div class="spinner"></div>
+            <p>请先选择省份和城市以查看疫情趋势图</p>
+          </div>
+        </div>
+        <div v-else id="mainChart" style="width: 100%; height: 400px;"></div>
       </div>
 
       <!-- 每日新增图 -->
       <div class="chart-section">
         <h3>每日新增确诊与死亡</h3>
-        <div id="dailyChart" style="width: 100%; height: 400px;"></div>
+        <!-- 骨架屏或加载提示（每日新增图） -->
+        <div v-if="!selectedProvince || !selectedCity" class="chart-placeholder">
+          <div class="skeleton-chart">
+            <div class="spinner"></div>
+            <p>请先选择省份和城市以查看每日新增图</p>
+          </div>
+        </div>
+
+        <div v-else id="dailyChart" style="width: 100%; height: 400px;"></div>
       </div>
+
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
-import NavBar from "@/components/NavBar.vue";
+import { ref, onMounted, watch } from "vue";
 import axios from "axios";
 import * as echarts from "echarts";
 
-const provinces = ref([
-  "河北", "山西", "内蒙古", "辽宁", "吉林", "黑龙江",
-  "江苏", "浙江", "安徽", "福建", "江西", "山东",
-  "河南", "湖北", "湖南", "广东", "广西", "海南",
-  "四川", "贵州", "云南", "西藏", "陕西", "甘肃",
-  "青海", "宁夏", "新疆", "北京", "上海"
-]);
+import NavBar from "@/components/NavBar.vue";
+import ChinaPopulationMap from "@/components/ChinaPopulationMap.vue";
 
-const cityMap = {
-  河北: ["石家庄", "唐山", "秦皇岛", "邯郸", "邢台", "保定", "张家口", "承德", "沧州", "廊坊", "衡水"],
-  山西: ["太原", "大同", "阳泉", "长治", "晋城", "朔州", "晋中", "运城", "忻州", "临汾", "吕梁"],
-  内蒙古: ["呼和浩特", "包头", "乌海", "赤峰", "通辽", "鄂尔多斯", "呼伦贝尔", "巴彦淖尔", "乌兰察布"],
-  辽宁: ["沈阳", "大连", "鞍山", "抚顺", "本溪", "丹东", "锦州", "营口", "阜新", "辽阳", "盘锦", "铁岭", "朝阳", "葫芦岛"],
-  吉林: ["长春", "吉林", "四平", "辽源", "通化", "白山", "松原", "白城"],
-  黑龙江: ["哈尔滨", "齐齐哈尔", "鸡西", "鹤岗", "双鸭山", "大庆", "伊春", "佳木斯", "七台河", "牡丹江", "黑河", "绥化"],
-  江苏: ["南京", "无锡", "徐州", "常州", "苏州", "南通", "连云港", "淮安", "盐城", "扬州", "镇江", "泰州", "宿迁"],
-  浙江: ["杭州", "宁波", "温州", "嘉兴", "湖州", "绍兴", "金华", "衢州", "舟山", "台州", "丽水"],
-  安徽: ["合肥", "芜湖", "蚌埠", "淮南", "马鞍山", "淮北", "铜陵", "安庆", "黄山", "阜阳", "宿州", "滁州", "六安", "宣城", "池州", "亳州"],
-  福建: ["福州", "厦门", "莆田", "三明", "泉州", "漳州", "南平", "龙岩", "宁德"],
-  江西: ["南昌", "景德镇", "萍乡", "九江", "抚州", "鹰潭", "赣州", "吉安", "宜春", "新余", "上饶"],
-  山东: ["济南", "青岛", "淄博", "枣庄", "东营", "烟台", "潍坊", "济宁", "泰安", "威海", "日照", "临沂", "德州", "聊城", "滨州", "菏泽"],
-  河南: ["郑州", "开封", "洛阳", "平顶山", "安阳", "鹤壁", "新乡", "焦作", "濮阳", "许昌", "漯河", "三门峡", "南阳", "商丘", "信阳", "周口", "驻马店"],
-  湖北: ["武汉", "黄石", "十堰", "宜昌", "襄阳", "鄂州", "荆门", "孝感", "荆州", "黄冈", "咸宁", "随州"],
-  湖南: ["长沙", "株洲", "湘潭", "衡阳", "邵阳", "岳阳", "常德", "张家界", "益阳", "郴州", "永州", "怀化", "娄底"],
-  广东: ["广州", "韶关", "深圳", "珠海", "汕头", "佛山", "江门", "湛江", "茂名", "肇庆", "惠州", "梅州", "汕尾", "河源", "阳江", "清远", "东莞", "中山", "潮州", "揭阳", "云浮"],
-  广西: ["南宁", "柳州", "桂林", "梧州", "北海", "防城港", "钦州", "贵港", "玉林", "百色", "贺州", "河池", "来宾", "崇左"],
-  海南: ["海口", "三亚", "三沙", "儋州"],
-  四川: ["成都", "自贡", "攀枝花", "泸州", "德阳", "绵阳", "广元", "遂宁", "内江", "乐山", "南充", "眉山", "宜宾", "广安", "达州", "雅安", "巴中", "资阳"],
-  贵州: ["贵阳", "六盘水", "遵义", "安顺", "毕节", "铜仁"],
-  云南: ["昆明", "曲靖", "玉溪", "保山", "昭通", "丽江", "普洱", "临沧"],
-  西藏: ["拉萨", "日喀则", "昌都", "林芝", "山南", "那曲"],
-  陕西: ["西安", "铜川", "宝鸡", "咸阳", "渭南", "延安", "汉中", "榆林", "安康", "商洛"],
-  甘肃: ["兰州", "嘉峪关", "金昌", "白银", "天水", "武威", "张掖", "平凉", "酒泉", "庆阳", "定西", "陇南"],
-  青海: ["西宁", "海东"],
-  宁夏: ["银川", "石嘴山", "吴忠", "固原", "中卫"],
-  新疆: ["乌鲁木齐", "克拉玛依", "吐鲁番", "哈密"],
-  北京: ["北京"],
-  上海: ["上海"]
-};
-
-
+const provinces = ref([]);
 const cities = ref([]);
 const selectedProvince = ref("");
 const selectedCity = ref("");
 const selectedModel = ref("tcn");
 const uploadStatus = ref("");
+const locationData = ref([]);
 
-let myChart = null;
+let mainChart = null;
 let dailyChart = null;
 
-const onProvinceChange = () => {
-  cities.value = selectedProvince.value ? cityMap[selectedProvince.value] || [] : [];
-  selectedCity.value = "";
-  clearCharts();
+// 获取省市数据
+const fetchLocations = async () => {
+  try {
+    const response = await axios.get("http://localhost:8081/api/locations");
+    locationData.value = response.data;
+    provinces.value = [...new Set(locationData.value.map(loc => loc.province))];
+  } catch (error) {
+    console.error("获取省市数据失败：", error);
+  }
 };
 
+// 监听省份变化，更新城市列表，并清空图表
+watch(selectedProvince, (newProvince) => {
+  if (newProvince) {
+    cities.value = locationData.value
+      .filter(loc => loc.province === newProvince)
+      .map(loc => loc.city);
+  } else {
+    cities.value = [];
+  }
+  selectedCity.value = "";
+  clearMainChart();
+  clearDailyChart();
+});
+
 const onCityChange = () => {
-  clearCharts();
+  clearMainChart();
+  clearDailyChart();
   loadChartData();
   loadDailyChartData();
 };
 
-const clearCharts = () => {
-  if (myChart) myChart.clear();
+const clearMainChart = () => {
+  if (mainChart) mainChart.clear();
+};
+
+const clearDailyChart = () => {
   if (dailyChart) dailyChart.clear();
 };
 
 const loadChartData = () => {
-  if (!selectedProvince.value || !selectedCity.value) return clearCharts();
+  if (!selectedProvince.value || !selectedCity.value) {
+    clearMainChart();
+    return;
+  }
 
-  axios.get("http://localhost:8082/api/region-stats/history", {
+  axios.get("http://localhost:8081/api/region-stats/history", {
     params: { province: selectedProvince.value, city: selectedCity.value },
-  })
-      .then((res) => {
-        const historyData = res.data;
-        const dates = historyData.map((i) => i.date);
-        const confirmed = historyData.map((i) => i.totalConfirmed);
-        const deaths = historyData.map((i) => i.totalDeaths);
-        const recovered = historyData.map((i) => i.totalRecovered);
+  }).then((res) => {
+    const historyData = res.data;
+    const dates = historyData.map(i => i.date);
+    const confirmed = historyData.map(i => i.totalConfirmed);
+    const deaths = historyData.map(i => i.totalDeaths);
+    const recovered = historyData.map(i => i.totalRecovered);
 
-        const option = {
-          animationDuration: 10000,
-          title: { text: "疫情发展趋势" },
-          tooltip: { trigger: "axis" },
-          legend: { data: ["确诊", "死亡", "治愈"] },
-          xAxis: { type: "category", data: dates },
-          yAxis: { type: "value" },
-          series: [
-            { name: "确诊", type: "line", data: confirmed },
-            { name: "死亡", type: "line", data: deaths },
-            { name: "治愈", type: "line", data: recovered },
-          ],
-          dataZoom: [
-            { type: 'slider', start: 80, end: 100 },
-            { type: 'inside', start: 80, end: 100 }
-          ]
-        };
+    const option = {
+      animationDuration: 10000,
+      title: { text: "疫情发展趋势" },
+      tooltip: { trigger: "axis" },
+      legend: { data: ["确诊", "死亡", "治愈"] },
+      xAxis: { type: "category", data: dates },
+      yAxis: { type: "value" },
+      series: [
+        { name: "确诊", type: "line", data: confirmed },
+        { name: "死亡", type: "line", data: deaths },
+        { name: "治愈", type: "line", data: recovered },
+      ],
+      dataZoom: [
+        { type: 'slider', start: 80, end: 100 },
+        { type: 'inside', start: 80, end: 100 }
+      ]
+    };
 
-        if (!myChart) myChart = echarts.init(document.getElementById("mainChart"));
-        myChart.setOption(option);
-      })
-      .catch(console.error);
+    if (!mainChart) mainChart = echarts.init(document.getElementById("mainChart"));
+    mainChart.setOption(option);
+  }).catch(console.error);
 };
 
 const loadDailyChartData = () => {
-  if (!selectedProvince.value || !selectedCity.value) return clearCharts();
+  if (!selectedProvince.value || !selectedCity.value) {
+    clearDailyChart();
+    return;
+  }
 
-  axios.get("http://localhost:8082/api/region-stats/daily", {
+  axios.get("http://localhost:8081/api/region-stats/daily", {
     params: { province: selectedProvince.value, city: selectedCity.value },
-  })
-      .then((res) => {
-        const dailyData = res.data;
-        renderDailyChart(dailyData);
-      })
-      .catch(console.error);
+  }).then((res) => {
+    renderDailyChart(res.data);
+  }).catch(console.error);
 };
 
 const predictData = async () => {
@@ -191,12 +185,11 @@ const predictData = async () => {
 
   try {
     uploadStatus.value = "正在准备预测数据...";
-    const res = await axios.get("http://localhost:8082/api/region-stats/daily", {
+    const res = await axios.get("http://localhost:8081/api/region-stats/daily", {
       params: { province: selectedProvince.value, city: selectedCity.value },
     });
-
     const dailyData = res.data;
-    const lastTwoWeeks = dailyData.slice(-14).map((d) => ({
+    const lastTwoWeeks = dailyData.slice(-14).map(d => ({
       date: d.date,
       newConfirmed: d.newConfirmed,
       newDeaths: d.newDeaths,
@@ -211,7 +204,6 @@ const predictData = async () => {
 
     const predictUrl = modelUrlMap[selectedModel.value] || modelUrlMap["lstm"];
     const predictRes = await axios.post(predictUrl, lastTwoWeeks);
-
 
     if (predictRes.status === 200 && Array.isArray(predictRes.data)) {
       uploadStatus.value = "预测成功！";
@@ -234,9 +226,10 @@ const predictData = async () => {
 };
 
 const renderDailyChart = (dailyData) => {
-  const dates = dailyData.map((d) => d.date);
-  const newConfirmed = dailyData.map((d) => d.newConfirmed);
-  const newDeaths = dailyData.map((d) => d.newDeaths);
+  const dates = dailyData.map(d => d.date);
+  const newConfirmed = dailyData.map(d => d.newConfirmed);
+  const newDeaths = dailyData.map(d => d.newDeaths);
+  const lastIndex = 704;
 
   const option = {
     animationDuration: 10000,
@@ -246,8 +239,26 @@ const renderDailyChart = (dailyData) => {
     xAxis: { type: "category", data: dates },
     yAxis: { type: "value" },
     series: [
-      { name: "新增确诊", type: "line", data: newConfirmed },
-      { name: "新增死亡", type: "line", data: newDeaths },
+      {
+        name: "新增确诊",
+        type: "line",
+        data: newConfirmed,
+        markLine: {
+          symbol: 'none',
+          lineStyle: {
+            type: 'dashed',
+            color: '#888'
+          },
+          data: [
+            { xAxis: dates[lastIndex] }
+          ]
+        }
+      },
+      {
+        name: "新增死亡",
+        type: "line",
+        data: newDeaths
+      }
     ],
     dataZoom: [
       { type: 'slider', start: 80, end: 100 },
@@ -258,75 +269,201 @@ const renderDailyChart = (dailyData) => {
   if (!dailyChart) dailyChart = echarts.init(document.getElementById("dailyChart"));
   dailyChart.setOption(option);
 };
+
+onMounted(fetchLocations);
 </script>
 
 <style scoped>
 .search {
-  padding-top: 50px;
   background-color: #f5f7fa;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding-bottom: 50px;
   min-height: 100vh;
-  font-family: 'Helvetica Neue', sans-serif;
+  color: #333;
 }
 
 .container {
-  max-width: 1000px;
-  margin: auto;
-  padding: 20px;
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 30px 20px;
 }
 
+.china-map-wrapper {
+  margin-top: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: #fff;
+  padding: 15px;
+}
+
+/* 选择区域卡片样式 */
 .test-select {
+  margin-top: 20px;
+  background: #fff;
+  padding: 20px 25px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(64, 158, 255, 0.15);
   display: flex;
   align-items: center;
+  gap: 20px;
   flex-wrap: wrap;
-  gap: 15px;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  user-select: none;
 }
 
 .test-select label {
-  font-weight: bold;
-  margin-right: 6px;
+  font-weight: 600;
+  color: #3a3a3a;
+  white-space: nowrap;
 }
 
 .test-select select {
+  min-width: 140px;
   padding: 8px 12px;
+  border: 1.8px solid #d0d7e6;
   border-radius: 6px;
-  border: 1px solid #ccc;
   font-size: 14px;
-  background-color: #fdfdfd;
-  transition: border-color 0.3s;
+  transition: border-color 0.3s ease;
+  cursor: pointer;
+}
+
+.test-select select:hover {
+  border-color: #409eff;
 }
 
 .test-select select:focus {
-  border-color: #409eff;
   outline: none;
+  border-color: #0066ff;
+  box-shadow: 0 0 8px rgba(64, 158, 255, 0.3);
 }
 
 .predict-btn {
-  padding: 10px 20px;
-  background-color: #409eff;
-  border: none;
-  border-radius: 6px;
+  background: linear-gradient(135deg, #409eff 0%, #66b1ff 100%);
   color: white;
-  font-weight: bold;
-  font-size: 14px;
+  padding: 10px 28px;
+  border: none;
+  font-weight: 700;
+  font-size: 16px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  box-shadow: 0 4px 12px rgba(64, 158, 255, 0.4);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+  user-select: none;
 }
 
 .predict-btn:hover:not(:disabled) {
-  background-color: #66b1ff;
+  background: linear-gradient(135deg, #337acc 0%, #5599ff 100%);
+  box-shadow: 0 6px 20px rgba(51, 122, 204, 0.6);
 }
 
+.predict-btn:disabled {
+  background: #c2c9d9;
+  cursor: not-allowed;
+  box-shadow: none;
+  color: #7a7f8a;
+}
+
+/* 上传状态提示 */
 .upload-status {
-  color: #333;
   font-size: 14px;
-  margin-bottom: 10px;
+  color: #555;
+  margin-bottom: 15px;
+  font-style: italic;
+  user-select: text;
 }
 
+/* 图表区域 */
 .chart-section {
-  margin-top: 30px;
+  margin-top: 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+  padding: 25px 30px;
+  user-select: none;
+}
+
+.chart-section h3 {
+  margin-bottom: 20px;
+  font-weight: 700;
+  color: #222;
+  border-left: 4px solid #409eff;
+  padding-left: 12px;
+  font-size: 22px;
+}
+
+/* 骨架屏与加载提示 */
+.chart-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 400px;
+  background-color: #e6ecf7;
+  border-radius: 12px;
+  border: 2px dashed #a6b1d1;
+  color: #637096;
+  font-size: 18px;
+  text-align: center;
+  flex-direction: column;
+  animation: fadeIn 0.4s ease-in-out;
+  user-select: none;
+}
+
+.skeleton-chart .spinner {
+  margin: 0 auto;
+  border: 6px solid #dce3f2;
+  border-top: 6px solid #409eff;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  animation: spin 1.2s linear infinite;
+  margin-bottom: 12px;
+}
+
+/* 动画 */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .test-select {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+  }
+
+  .test-select label,
+  .test-select select,
+  .predict-btn {
+    width: 100%;
+  }
+
+  .predict-btn {
+    padding: 12px 0;
+    font-size: 18px;
+  }
+
+  .chart-section h3 {
+    font-size: 20px;
+  }
 }
 </style>

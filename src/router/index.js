@@ -4,7 +4,7 @@ import Overview from '@/views/Overview.vue'
 import Global from '@/views/Global.vue'
 import Domestic from '@/views/Domestic.vue'
 import Search from '@/views/Search.vue'
-import AMapCountryMap_TopBar from "@/components/AMapCountryMap_TopBar.vue";
+import CountryPage from "@/views/CountryPage.vue";
 
 const routes = [
     { path: '/', name: 'Overview', component: Overview },
@@ -13,9 +13,14 @@ const routes = [
     { path: '/search', name: 'Search', component: Search },
     {
         path: '/country/:name',
-        name: 'AMapCountryMap_TopBar',
-        component: AMapCountryMap_TopBar
-    }
+        name: 'CountryPage',
+        component: CountryPage
+    },
+    {
+        path: '/country/:name/:code?',
+        name: 'CountryPage',
+        component: CountryPage,
+    },
 ]
 
 export default createRouter({

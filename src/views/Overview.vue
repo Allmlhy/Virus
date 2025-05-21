@@ -9,16 +9,8 @@
 
       <div class="carousel" @mouseenter="pause" @mouseleave="play">
         <div class="carousel-items" :style="carouselStyle">
-          <a
-              v-for="(news, index) in filteredNews"
-              :key="index"
-              class="carousel-item"
-              :style="getItemStyle(index)"
-              :href="news.url || '#'"
-              target="_blank"
-              rel="noopener noreferrer"
-              @click="pause"
-          >
+          <a v-for="(news, index) in filteredNews" :key="index" class="carousel-item" :style="getItemStyle(index)"
+            :href="news.url || '#'" target="_blank" rel="noopener noreferrer" @click="pause">
             <img :src="news.image" alt="新闻图片" />
             <div class="caption">
               <h2>{{ news.title }}</h2>
@@ -27,11 +19,12 @@
         </div>
       </div>
     </div>
-      <SearchModal v-model="showSearchModal" @search="handleSearch" />
+    <SearchModal v-model="showSearchModal" @search="handleSearch" />
 
     <!-- 按钮固定在屏幕两侧 -->
     <button class="nav prev" @click="prev" aria-label="上一条新闻">‹</button>
     <button class="nav next" @click="next" aria-label="下一条新闻">›</button>
+    <TreeChart />
   </div>
 </template>
 
@@ -40,7 +33,7 @@ import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import NavBar from '@/components/NavBar.vue';
 import SearchModal from '@/components/SearchModal/SearchModal.vue'
 import CountryCard from '@/components/CountryCard/CountryCard.vue'
-
+import TreeChart from '@/components/TreeChart.vue'
 const newsList = [
   {
     title: '中疾控回应新冠疫情态势：临床严重性没有发生明显变化',
@@ -155,8 +148,18 @@ onBeforeUnmount(() => {
   color: #333;
   display: flex;
   flex-direction: column;
-  align-items: center;  /* 水平居中所有内容 */
+  align-items: center;
+  /* 水平居中所有内容 */
 }
+
+.caption h2 {
+  font-size: 1.4rem;
+  /* 缩小字体，例如从2rem改为1.4rem */
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.4;
+}
+
 
 .carousel-container {
   max-width: 820px;
@@ -182,13 +185,25 @@ onBeforeUnmount(() => {
 }
 
 @keyframes typing {
-  from { width: 0 }
-  to { width: 30ch }
+  from {
+    width: 0
+  }
+
+  to {
+    width: 30ch
+  }
 }
 
 @keyframes blink-caret {
-  0%, 100% { border-color: transparent }
-  50% { border-color: rgba(34, 34, 34, 0.75) }
+
+  0%,
+  100% {
+    border-color: transparent
+  }
+
+  50% {
+    border-color: rgba(34, 34, 34, 0.75)
+  }
 }
 
 .carousel {
@@ -218,8 +233,8 @@ onBeforeUnmount(() => {
   border-radius: 16px;
   background: #fff;
   box-shadow:
-      0 8px 28px rgb(0 0 0 / 0.15),
-      0 16px 40px rgb(0 0 0 / 0.1);
+    0 8px 28px rgb(0 0 0 / 0.15),
+    0 16px 40px rgb(0 0 0 / 0.1);
   cursor: pointer;
   overflow: hidden;
   transition: all 0.6s ease;

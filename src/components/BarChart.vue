@@ -5,15 +5,8 @@
     <!-- 前几个国家数量选择和是否显示累计确诊与累计死亡的复选框放一行 -->
     <div class="top-countries-selector">
       <label for="topCountriesCount">显示前N个国家 (5-20):</label>
-      <input
-          type="number"
-          v-model="topCountriesCount"
-          id="topCountriesCount"
-          min="5"
-          max="20"
-          step="1"
-          @change="updateChartData"
-      >
+      <input type="number" v-model="topCountriesCount" id="topCountriesCount" min="5" max="20" step="1"
+        @change="updateChartData">
       <!-- 是否显示累计确诊与累计死亡的复选框 -->
       <div class="checkboxes">
         <label>
@@ -29,12 +22,8 @@
 
     <!-- 柱状图 -->
     <div class="bar-chart">
-      <Bar
-          v-if="!loading && chartData.labels && chartData.labels.length > 0"
-          :data="chartData"
-          :options="chartOptions"
-          :key="chartKey"
-      />
+      <Bar v-if="!loading && chartData.labels && chartData.labels.length > 0" :data="chartData" :options="chartOptions"
+        :key="chartKey" />
       <div v-if="loading" class="loading">数据加载中...</div>
       <div v-if="!loading && chartData.labels && chartData.labels.length === 0" class="no-data">暂无数据</div>
     </div>
@@ -125,7 +114,7 @@ const chartOptions = ref({
     },
     tooltip: {
       callbacks: {
-        label: function(context) {
+        label: function (context) {
           return `${context.dataset.label}: ${context.raw.toLocaleString()}`;
         }
       }
@@ -139,7 +128,7 @@ const chartOptions = ref({
       beginAtZero: true,
       ticks: {
         stepSize: 2000000,
-        callback: function(value) {
+        callback: function (value) {
           return value.toLocaleString();
         }
       }
@@ -206,33 +195,34 @@ const updateChartData = async () => {
 
 // 监听父组件传递的日期数据变化，更新图表数据
 watch(
-    () => [
-      props.selectedYear,
-      props.selectedMonth,
-      props.selectedDay,
-      validatedCount.value,
-      showConfirmed.value,
-      showDeaths.value
-    ],
-    () => {
-      updateChartData();
-      chartKey.value++; // 确保图表重渲染
-    },
-    { immediate: true }
+  () => [
+    props.selectedYear,
+    props.selectedMonth,
+    props.selectedDay,
+    validatedCount.value,
+    showConfirmed.value,
+    showDeaths.value
+  ],
+  () => {
+    updateChartData();
+    chartKey.value++; // 确保图表重渲染
+  },
+  { immediate: true }
 );
 </script>
 
 <style scoped>
 .bar-chart-container {
-  margin-top: -30px;
   width: 100%;
-  width: 500px;
-  max-width: 1000px;
+  max-width: 1200px;
+  /* 统一最大宽度 */
   margin: 20px auto;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  background: var(--color-background-soft);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  /* 统一阴影 */
+  border: 1px solid var(--color-border);
 }
 
 h2 {
@@ -260,12 +250,15 @@ label {
   color: #34495E;
 }
 
-input[type="number"], input[type="checkbox"] {
-  padding: 4px 8px; /* 减少内边距 */
+input[type="number"],
+input[type="checkbox"] {
+  padding: 4px 8px;
+  /* 减少内边距 */
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 14px;
 }
+
 
 input[type="number"] {
   width: 60px;
@@ -277,12 +270,13 @@ input[type="checkbox"] {
 
 .bar-chart {
   width: 100%;
-  height: 500px;
+  height: 380px;
   margin-top: 20px;
   position: relative;
 }
 
-.loading, .no-data {
+.loading,
+.no-data {
   position: absolute;
   top: 50%;
   left: 50%;
